@@ -1,0 +1,55 @@
+name: XSMN 6h sáng
+
+on:
+  schedule:
+    - cron: '0 23 * * *'    # 23:00 UTC = 06:00 giờ Việt Nam hôm sau
+  workflow_dispatch:         # nút bấm chạy tay
+
+permissions:
+  contents: write
+
+concurrency:
+  group: xsmn-daily
+  cancel-in-progress: false
+
+jobs:
+  chay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - run: pip install -r requirements.txt
+
+      - name: Kiểm tra truy cập nguồn dữ liệu
+        run: |
+          python -c "
+          import requests, sys
+          H = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
+          r = requests.get('https://xskt.com.vn/xstv/10-ngay', headers=H, timeout=30)
+          print('HTTP', r.status_code, '|', len(r.text), 'bytes')
+          sys.exit(0 if r.status_code == 200 and len(r.text) > 5000 else 'Nguon du lieu chan hoac tra noi dung bat thuong')
+          "
+
+      - name: Chạy dự báo và gửi email
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_TO:   ${{ secrets.MAIL_TO }}
+        run: python -u daily.py 2>&1 | tee bao_cao.txt
+
+      - name: Lưu kho dữ liệu & log vào repo
+        if: always()
+        run: |
+          git config user.name  "xsmn-bot"
+          git config user.email "actions@github.com"
+          mkdir -p log && cp -f bao_cao.txt "log/$(date -u -d '+7 hours' +%Y-%m-%d).txt" 2>/dev/null || true
+          git add -A data log 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Chạy $(date -u -d '+7 hours' +%Y-%m-%d)"
+          git pull --rebase --autostash || true
+          git push || true
