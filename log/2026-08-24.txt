@@ -2,7 +2,7 @@
 
   Mật khẩu ứng dụng: OK
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T07:52
+  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T08:41
   Đang tải các kỳ mới...
   Cập nhật 35 đài (tải 30 kỳ gần nhất mỗi đài)...
 
@@ -21,14 +21,17 @@
      [35] Thành phố Huế           Miền Trung
      [36] Miền Bắc (XSMB)         Miền Bắc
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T08:41
+  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T12:25
 
   Đang phân tích...
-     ✓ [ 8] Cà Mau                    6.3s  (150 kỳ ≤ 17/08/2026, từ KHO)
-     ✓ [ 1] TP. Hồ Chí Minh           6.5s  (150 kỳ ≤ 22/08/2026, từ KHO)
-     ✓ [12] Đồng Tháp                 6.6s  (150 kỳ ≤ 17/08/2026, từ KHO)
-     ✓ [30] Phú Yên                   6.5s  (150 kỳ ≤ 17/08/2026, từ KHO)
-     ✗ [35] Thành phố Huế           LỖI: chỉ còn 0 kỳ trước 24.08.2026
+     ✓ [ 8] Cà Mau                    6.4s  (150 kỳ ≤ 17/08/2026, từ KHO)
+     ✓ [ 1] TP. Hồ Chí Minh           6.7s  (150 kỳ ≤ 22/08/2026, từ KHO)
+     ✓ [12] Đồng Tháp                 6.7s  (150 kỳ ≤ 17/08/2026, từ KHO)
+     ✓ [30] Phú Yên                   6.7s  (150 kỳ ≤ 17/08/2026, từ KHO)
+     ✗ [35] Thành phố Huế           LỖI:
+          chỉ còn 0 kỳ trước 24.08.2026 (cần >=40)
+          Tải về 190 kỳ, khoảng ngày ? → ?
+          Có 190 kỳ không đọc được ngày.
      ✓ [36] Miền Bắc (XSMB)           6.8s  (150 kỳ ≤ 23/08/2026, từ KHO)
 
 [A] TỔNG HỢP
