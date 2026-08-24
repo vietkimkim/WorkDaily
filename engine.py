@@ -44,14 +44,17 @@ from itertools import product
 
 # ①②③ Số con mỗi module. Đặt 0 để tắt module đó.
 SO_KY       = 150            # số kỳ dữ liệu huấn luyện mỗi đài
-SO_CON_DB   = 0             # ① ĐỀ ĐẶC BIỆT : 2 số cuối giải ĐB        (0 = tắt)
+SO_CON_DB   = 64             # ① ĐỀ ĐẶC BIỆT : 2 số cuối giải ĐB        (0 = tắt)
 SO_CON_LO2  = 20              # ② BAO LÔ 2 SỐ : 2 số cuối của MỌI giải   (0 = tắt)
 SO_CON_3SO  = 50             # ③ LÔ 3 SỐ     : 3 số cuối của mọi giải   (0 = tắt)
+SO_CON_4SO  = 0              # ④ LÔ 4 SỐ     : 4 số cuối của mọi giải   (0 = tắt)
+                             #    ⚠ EV -11,12% — TỆ NHẤT. Mật độ 0,30 mẫu/ô.
 
 # Số ĐIỂM cược mỗi con — quyết định vốn thật
 DIEM_DB     = 5              # ① 82 con × 5 điểm × 1 lô  = 410
 DIEM_LO2    = 2              # ② 4 con × 2 điểm × số lô
 DIEM_3SO    = 1              # ③ 50 con × 1 điểm × số lô
+DIEM_4SO    = 1              # ④ điểm cược mỗi con
 
 # Số LÔ tính tiền cho bao lô. Đặt None = dùng đúng số giải bóc được.
 # Nhiều nơi KHÔNG tính G8 vào bao lô 2 số → khi đó MN/MT là 17, không phải 18.
@@ -59,9 +62,12 @@ SO_LO_2SO_MN = 17            # bao lô 2 số Miền Nam / Trung
 SO_LO_2SO_MB = 27            # bao lô 2 số Miền Bắc
 SO_LO_3SO_MN = 17            # bao lô 3 số Miền Nam / Trung
 SO_LO_3SO_MB = 23            # bao lô 3 số Miền Bắc
+SO_LO_4SO_MN = 16            # bao lô 4 số Miền Nam / Trung (giải >= 4 chữ số)
+SO_LO_4SO_MB = 20            # bao lô 4 số Miền Bắc
 
 TY_LE_TRA_2SO = 95.0         # thưởng con 2 số  (hoà vốn = 100)
 TY_LE_TRA_3SO = 961.0        # thưởng con 3 số  (hoà vốn = 1000)
+TY_LE_TRA_4SO = 8888.0       # thưởng con 4 số  (hoà vốn = 10000 → EV -11,12%)
 
 
 HIEN_DONG_COPY = False   # True = in thêm dòng số phân cách bằng dấu phẩy dưới mỗi vùng
@@ -81,8 +87,24 @@ HIEN_BANG_CHI_TIET = False   # True = in bảng điểm từng tín hiệu (in T
 ALPHA, AUX_WEIGHT  = 1.0, 0.35
 DIVERSITY_CAP      = None          # None = tự tính theo số lượng cần trả về
 BACKTEST_MIN_TRAIN = 10
-WEIGHT_GRID        = [0.0, 1.0]            # 9 tín hiệu 2 số -> 2^9 = 511 tổ hợp
+# --- CHỌN BỘ TÍN HIỆU ---
+# "GON"  : 5 tín hiệu có cơ chế thống kê rõ ràng -> 31 tổ hợp. KHUYẾN NGHỊ.
+# "DAY"  : cả 9 tín hiệu -> 511 tổ hợp. Overfit gấp ~1,8 lần trên nhiễu.
+# Đo trên dữ liệu ngẫu nhiên (không có quy luật), hit rate ảo so với mốc 20%:
+#     9 tín hiệu -> +3,10%      5 tín hiệu -> +1,74%      (giảm 44% ảo giác)
+BO_TIN_HIEU        = "GON"
+
+# Tín hiệu bị loại khỏi bộ GON và lý do:
+#   S3_Gan      - phân phối hình học KHÔNG NHỚ, giá trị thông tin lý thuyết = 0
+#   S4_ChamTong - hàm của chính các chữ số, trùng lặp với S1/S7
+#   S5_BongSo   - quy tắc dân gian, chỉ là hoán vị của S1, không có cơ chế
+#   S6_CauTruc  - giả định "bù trừ" (mean reversion) — sai với các kỳ độc lập
+TIN_HIEU_GON = ["S1_TanSuat", "S2_MarkovKy", "S7_ToanGiai",
+                "S8_BigramJM", "S9_JamesStein"]
+
+WEIGHT_GRID        = [0.0, 1.0]
 WEIGHT_GRID_3      = [0.0, 1.0]            # 7 tín hiệu 3 số -> 2^7 = 127 tổ hợp
+WEIGHT_GRID_4      = [0.0, 1.0]            # 7 tín hiệu 4 số -> 2^7 = 127 tổ hợp
 LAMBDA_GRID        = [0.3, 0.5, 0.7, 0.9]  # lưới nội suy Jelinek-Mercer
 N_NULL             = None          # None = tự tune theo SO_KY
 MAX_BACKTEST_PTS   = None
@@ -675,11 +697,22 @@ def cham_diem(wins, w, k, cap):
         hits += h; tong += len(mt); per.append(h)
     return hits/tong, hits, tong, per
 
+def _chi_so_tin_hieu():
+    """Vị trí các tín hiệu đang bật. Bộ GON dò 31 tổ hợp thay vì 511."""
+    if BO_TIN_HIEU.upper() == "GON":
+        return [i for i, n in enumerate(SIG_NAMES) if n in TIN_HIEU_GON]
+    return list(range(len(SIGNALS)))
+
+
 def toi_uu(wins, k, cap):
+    """Quét tổ hợp trọng số. CHỈ dò trên các tín hiệu đang bật — mỗi tín hiệu
+       thêm vào làm gấp đôi diện tích dò tìm quy luật giả."""
+    idx = _chi_so_tin_hieu()
     best = (None, -1., 0, None)
-    for combo in product(WEIGHT_GRID, repeat=len(SIGNALS)):
-        w = np.array(combo, float)
-        if w.sum() == 0: continue
+    for combo in product(WEIGHT_GRID, repeat=len(idx)):
+        if sum(combo) == 0: continue
+        w = np.zeros(len(SIGNALS))
+        for j, c in zip(idx, combo): w[j] = c
         hr, h, tot, per = cham_diem(wins, w, k, cap)
         if hr > best[1]: best = (w, hr, h, per)
     return best
@@ -963,6 +996,228 @@ def auto_tune_3(n):
     return 25, 90, 40
 
 
+
+
+# ==============================================================================
+#  [21] ENGINE 4 SỐ — không gian 10.000, mục tiêu = 4 chữ số cuối của mọi giải
+#       có từ 4 chữ số trở lên.  MN/MT: 16 lô/kỳ   |   MB: 20 lô/kỳ
+#
+#  ⚠ CẢNH BÁO MẬT ĐỘ: 150 kỳ × 20 lô = 3.000 quan sát trên 10.000 ô = 0,30 mẫu/ô.
+#    Đây là mật độ THẤP NHẤT trong mọi module. Khoảng 74% số 4 chữ số chưa từng
+#    xuất hiện lần nào. Mô hình n-gram giảm nhẹ vấn đề nhưng KHÔNG giải quyết được.
+#  ⚠ EV: 8888/10000 − 1 = −11,12% — tệ nhất trong mọi loại cược của hệ thống.
+# ==============================================================================
+
+QUADS = np.array([(i//1000, (i//100) % 10, (i//10) % 10, i % 10) for i in range(10000)])
+Q_D1, Q_D2, Q_D3, Q_D4 = QUADS[:, 0], QUADS[:, 1], QUADS[:, 2], QUADS[:, 3]
+
+
+def lo4_cua_ky(so_list):
+    """4 chữ số cuối của mọi giải >= 4 chữ số. ĐB đứng đầu (trạng thái Markov Q3)."""
+    return [s[-4:] for s in so_list if len(s) >= 4]
+
+
+def _dem_4so(train4):
+    """Unigram theo vị trí (4x10) + 3 bigram liền kề (10x10 mỗi cái)."""
+    uni = np.full((4, 10), ALPHA)
+    bg = np.full((3, 10, 10), ALPHA)
+    for ky in train4:
+        for t in ky:
+            d = [int(c) for c in t]
+            for i in range(4):
+                uni[i][d[i]] += 1
+            for i in range(3):
+                bg[i][d[i]][d[i+1]] += 1
+    return uni, bg
+
+
+def _lambda_4so(train4):
+    """λ Jelinek-Mercer ước lượng từ held-out 80/20 — không áp đặt hằng số.
+       Không có cấu trúc bigram thì λ tự rơi xuống mức thấp nhất."""
+    if len(train4) < 10:
+        return LAMBDA_GRID[0]
+    cut = int(len(train4) * 0.8)
+    fit, held = train4[:cut], train4[cut:]
+    uni, bg = _dem_4so(fit)
+    pu = uni / uni.sum(1, keepdims=True)
+    P = bg / bg.sum(2, keepdims=True)
+    best, best_ll = LAMBDA_GRID[0], -np.inf
+    for lam in LAMBDA_GRID:
+        Q = [lam * P[i] + (1 - lam) * pu[i+1][None, :] for i in range(3)]
+        ll = 0.0
+        for ky in held:
+            for t in ky:
+                d = [int(c) for c in t]
+                ll += np.log(pu[0][d[0]])
+                for i in range(3):
+                    ll += np.log(Q[i][d[i], d[i+1]])
+        if ll > best_ll:
+            best, best_ll = lam, ll
+    return best
+
+
+def Q1_vitri(train4, ctx):
+    """Q1 — Tần suất chữ số theo VỊ TRÍ. 4x10 = 40 ô, mật độ mẫu cao nhất."""
+    p = ctx["uni"] / ctx["uni"].sum(1, keepdims=True)
+    return zscore(np.log(p[0][Q_D1]) + np.log(p[1][Q_D2])
+                  + np.log(p[2][Q_D3]) + np.log(p[3][Q_D4]))
+
+
+def Q2_ngram(train4, ctx):
+    """Q2 — N-gram nội suy Jelinek-Mercer, CỐT LÕI của module này:
+       P(abcd) ≈ P1(a)·Q(b|a)·Q(c|b)·Q(d|c)
+       Ước lượng 10 + 3×100 = 310 tham số thay vì 10.000."""
+    uni, bg, lam = ctx["uni"], ctx["bg"], ctx["lam"]
+    pu = uni / uni.sum(1, keepdims=True)
+    P = bg / bg.sum(2, keepdims=True)
+    Q = [lam * P[i] + (1 - lam) * pu[i+1][None, :] for i in range(3)]
+    return zscore(np.log(pu[0][Q_D1]) + np.log(Q[0][Q_D1, Q_D2])
+                  + np.log(Q[1][Q_D2, Q_D3]) + np.log(Q[2][Q_D3, Q_D4]))
+
+
+def Q3_markovky(train4, ctx):
+    """Q3 — Markov LIÊN KỲ: trạng thái = lô 4 số của ĐB kỳ trước, chuyển sang
+       toàn bộ lô của kỳ sau. 4 ma trận 10x10."""
+    T = np.full((4, 10, 10), ALPHA)
+    for t in range(len(train4) - 1):
+        prev = train4[t][0]
+        for nxt in train4[t + 1]:
+            for i in range(4):
+                T[i][int(prev[i])][int(nxt[i])] += 1
+    T /= T.sum(2, keepdims=True)
+    p = [int(c) for c in train4[-1][0]]
+    return zscore(np.log(T[0][p[0]][Q_D1]) + np.log(T[1][p[1]][Q_D2])
+                  + np.log(T[2][p[2]][Q_D3]) + np.log(T[3][p[3]][Q_D4]))
+
+
+def Q4_gan(train4, ctx):
+    """Q4 — Gan mức chữ số theo vị trí. Hazard phẳng ⇒ giá trị thông tin lý
+       thuyết = 0; vẫn cài để backtest tự phán xử bằng trọng số."""
+    n = len(train4)
+    g = np.full((4, 10), float(n))
+    for t in range(n - 1, -1, -1):
+        for tt in train4[t]:
+            for i in range(4):
+                g[i][int(tt[i])] = min(g[i][int(tt[i])], n - 1 - t)
+    return zscore(zscore(g[0])[Q_D1] + zscore(g[1])[Q_D2]
+                  + zscore(g[2])[Q_D3] + zscore(g[3])[Q_D4])
+
+
+def Q5_chamtong(train4, ctx):
+    """Q5 — Chạm tổng (a+b+c+d) mod 10. Chỉ 10 ô -> mật độ mẫu rất tốt."""
+    cs = np.full(10, ALPHA)
+    for ky in train4:
+        for t in ky:
+            cs[sum(int(c) for c in t) % 10] += 1
+    ps = cs / cs.sum()
+    return zscore(np.log(ps[(Q_D1 + Q_D2 + Q_D3 + Q_D4) % 10]))
+
+
+def Q6_bongso(train4, ctx):
+    """Q6 — Bóng số 0↔5,1↔6,2↔7,3↔8,4↔9. Mã hoá kiểm định được."""
+    p = ctx["uni"] / ctx["uni"].sum(1, keepdims=True)
+    m = np.array([[p[i][MIRROR[d]] for d in range(10)] for i in range(4)])
+    return zscore(np.log(m[0][Q_D1]) + np.log(m[1][Q_D2])
+                  + np.log(m[2][Q_D3]) + np.log(m[3][Q_D4]))
+
+
+def Q7_cautruc(train4, ctx):
+    """Q7 — Cân bằng cấu trúc: có chữ số lặp, tài/xỉu, chẵn hết, tổng chẵn.
+       Theo hướng BÙ TRỪ; sai hướng thì backtest gán trọng số 0."""
+    tot = 0
+    obs = {"lap": 0.0, "tai": 0.0, "chanhet": 0.0, "tongchan": 0.0}
+    for ky in train4:
+        for t in ky:
+            d = [int(c) for c in t]
+            tot += 1
+            if len(set(d)) < 4: obs["lap"] += 1
+            if int(t) >= 5000: obs["tai"] += 1
+            if all(x % 2 == 0 for x in d): obs["chanhet"] += 1
+            if sum(d) % 2 == 0: obs["tongchan"] += 1
+    for k in obs:
+        obs[k] /= max(tot, 1)
+    exp = {"lap": 0.4960, "tai": 0.5000, "chanhet": 0.0625, "tongchan": 0.5000}
+    val = Q_D1 * 1000 + Q_D2 * 100 + Q_D3 * 10 + Q_D4
+    khac = ((Q_D1 != Q_D2) & (Q_D1 != Q_D3) & (Q_D1 != Q_D4)
+            & (Q_D2 != Q_D3) & (Q_D2 != Q_D4) & (Q_D3 != Q_D4))
+    ind = {"lap": (~khac).astype(float),
+           "tai": (val >= 5000).astype(float),
+           "chanhet": ((Q_D1 % 2 == 0) & (Q_D2 % 2 == 0)
+                       & (Q_D3 % 2 == 0) & (Q_D4 % 2 == 0)).astype(float),
+           "tongchan": (((Q_D1 + Q_D2 + Q_D3 + Q_D4) % 2) == 0).astype(float)}
+    sc = np.zeros(10000)
+    for k in exp:
+        sc += (exp[k] - obs[k]) * (2 * ind[k] - 1)
+    return zscore(sc)
+
+
+SIGNALS_4 = [("Q1_ViTri", Q1_vitri), ("Q2_Ngram", Q2_ngram),
+             ("Q3_MarkovKy", Q3_markovky), ("Q4_Gan", Q4_gan),
+             ("Q5_ChamTong", Q5_chamtong), ("Q6_BongSo", Q6_bongso),
+             ("Q7_CauTruc", Q7_cautruc)]
+SIG4_NAMES = [n for n, _ in SIGNALS_4]
+
+
+def build_signal_matrix_4(train4):
+    uni, bg = _dem_4so(train4)
+    ctx = {"uni": uni, "bg": bg, "lam": _lambda_4so(train4)}
+    return np.vstack([f(train4, ctx) for _, f in SIGNALS_4]), ctx["lam"]
+
+
+def tinh_cap4(k):
+    """Trần đa dạng hoá cho 4 vị trí chữ số."""
+    return int(min(k, max(3, math.ceil(k / 10) + 2)))
+
+
+def select_top4(scores, k, cap):
+    """Ràng buộc đa dạng hoá trên CẢ 4 vị trí chữ số."""
+    order = np.argsort(-scores, kind="stable")
+    for c in range(cap, k + 1):
+        chosen, u = [], [[0] * 10 for _ in range(4)]
+        for idx in order:
+            d = (Q_D1[idx], Q_D2[idx], Q_D3[idx], Q_D4[idx])
+            if all(u[i][d[i]] < c for i in range(4)):
+                chosen.append(idx)
+                for i in range(4):
+                    u[i][d[i]] += 1
+                if len(chosen) == k:
+                    return np.array(chosen), c
+    return order[:k], k
+
+
+def precompute_windows_4(draws4, min_train=30, max_pts=None):
+    starts = list(range(min_train, len(draws4)))
+    if max_pts and len(starts) > max_pts:
+        starts = starts[-max_pts:]
+    out = []
+    for t in starts:
+        Z, _ = build_signal_matrix_4(draws4[:t])
+        out.append((Z, np.array([int(x) for x in draws4[t]])))
+    return out
+
+
+def cham_diem_4(wins4, w, k, cap):
+    hits, tong, per = 0, 0, []
+    for Z, mt in wins4:
+        sel = set(select_top4(w @ Z, k, cap)[0].tolist())
+        h = sum(1 for x in mt if x in sel)
+        hits += h; tong += len(mt); per.append(h)
+    return hits / tong, hits, tong, per
+
+
+def toi_uu_trong_so_4(wins4, k, cap, grid=None):
+    grid = grid or WEIGHT_GRID_4
+    best = (None, -1.0, 0, None)
+    for combo in product(grid, repeat=len(SIGNALS_4)):
+        w = np.array(combo, float)
+        if w.sum() == 0:
+            continue
+        hr, h, tot, per = cham_diem_4(wins4, w, k, cap)
+        if hr > best[1]:
+            best = (w, hr, h, per)
+    return best
+
+
 # ==============================================================================
 #  [12] CHỌN NGÀY  —  tự tìm đài quay ngày đó, chống rò rỉ dữ liệu tương lai
 # ==============================================================================
@@ -1216,9 +1471,13 @@ def null_ho_v8(n_runs, n_ky, co_cau, cau_hinh, min_train, max_pts, rng=None):
         gia = [sinh_ky_gia(co_cau, rng) for _ in range(n_ky)]
         pool = [[int(s[-2:]) for s in ky] for ky in gia]
         g3 = [lo3_cua_ky(ky) for ky in gia]
+        g4 = [lo4_cua_ky(ky) for ky in gia]
         hang = []
         for key, loai, vt, K, cap in cau_hinh:
-            if loai == "3so":
+            if loai == "4so":
+                hang.append(toi_uu_trong_so_4(
+                    precompute_windows_4(g4, min_train=min_train, max_pts=max_pts), K, cap)[1])
+            elif loai == "3so":
                 hang.append(toi_uu_trong_so_3(
                     precompute_windows_3(g3, min_train=min_train, max_pts=max_pts), K, cap)[1])
             else:
@@ -1232,7 +1491,8 @@ def null_ho_v8(n_runs, n_ky, co_cau, cau_hinh, min_train, max_pts, rng=None):
 
 
 def khoa_v8(khu, n, Ks, min_train, max_pts):
-    raw = f"v8|{khu}|{n}|{Ks['DB']}|{Ks['LO2']}|{Ks['3SO']}|{min_train}|{max_pts}"
+    raw = (f"v8|{khu}|{n}|{Ks['DB']}|{Ks['LO2']}|{Ks['3SO']}|{Ks.get('4SO',0)}"
+           f"|{min_train}|{max_pts}")
     return hashlib.md5(raw.encode()).hexdigest()[:16]
 
 
@@ -1241,6 +1501,7 @@ def cau_hinh_module(Ks):
     if Ks.get("DB"):  ch.append(("DB",  "2so", 0,    Ks["DB"],  tinh_cap(Ks["DB"])))
     if Ks.get("LO2"): ch.append(("LO2", "2so", None, Ks["LO2"], tinh_cap(Ks["LO2"])))
     if Ks.get("3SO"): ch.append(("3SO", "3so", None, Ks["3SO"], tinh_cap3(Ks["3SO"])))
+    if Ks.get("4SO"): ch.append(("4SO", "4so", None, Ks["4SO"], tinh_cap4(Ks["4SO"])))
     return ch
 
 
@@ -1269,7 +1530,8 @@ def bao_dam_cache_v8(khus, so_ky, Ks):
 
 MO_TA = {"DB":  ("① ĐỀ ĐẶC BIỆT",  "2 chữ số CUỐI của giải ĐẶC BIỆT"),
          "LO2": ("② BAO LÔ 2 SỐ",  "2 chữ số CUỐI của BẤT KỲ giải nào"),
-         "3SO": ("③ LÔ 3 SỐ",      "3 chữ số CUỐI của mọi giải từ 3 chữ số trở lên")}
+         "3SO": ("③ LÔ 3 SỐ",      "3 chữ số CUỐI của mọi giải từ 3 chữ số trở lên"),
+         "4SO": ("④ LÔ 4 SỐ",      "4 chữ số CUỐI của mọi giải từ 4 chữ số trở lên")}
 
 
 def chay_dai_v8(stt, ngay_moc, so_ky, Ks, cache, dung_master=True):
@@ -1330,11 +1592,24 @@ def chay_dai_v8(stt, ngay_moc, so_ky, Ks, cache, dung_master=True):
     n = len(tg); n_lo2 = len(tg[0]); n_lo3 = len(lo3_cua_ky(tg[0]))
     pool = [[int(s[-2:]) for s in ky] for ky in tg]
     g3 = [lo3_cua_ky(ky) for ky in tg]
+    g4 = [lo4_cua_ky(ky) for ky in tg]
+    n_lo4 = len(g4[0])
     _, mp, mt = auto_tune7(so_ky)
 
     mods = []
     for key, loai, vt, K, cap in cau_hinh_module(Ks):
-        if loai == "3so":
+        if loai == "4so":
+            wins = precompute_windows_4(g4, min_train=mt, max_pts=mp)
+            w, hr, h, per = toi_uu_trong_so_4(wins, K, cap)
+            Zf, lam = build_signal_matrix_4(g4)
+            sel, _ = select_top4(w @ Zf, K, cap)
+            so = sorted(f"{i:04d}" for i in sel)
+            lo_tien = SO_LO_4SO_MB if khu == "MB" else SO_LO_4SO_MN
+            mt_per, p0, von = n_lo4, K/10000., lo_tien*K*DIEM_4SO
+            tin = [nm for nm, wv in zip(SIG4_NAMES, w) if wv > 0]
+            tra = TY_LE_TRA_4SO
+            d_con = DIEM_4SO
+        elif loai == "3so":
             wins = precompute_windows_3(g3, min_train=mt, max_pts=mp)
             w, hr, h, per = toi_uu_trong_so_3(wins, K, cap)
             Zf, lam = build_signal_matrix_3(g3)
@@ -1504,14 +1779,16 @@ def gui_email_v8(ket, ngay_moc, tong_von, tong_ev, loi, dong_dc):
 #  [18] PIPELINE CHÍNH — TỰ LẤY NGÀY HÔM NAY, CHẠY TẤT CẢ ĐÀI
 # ==============================================================================
 
-def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None):
+def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None,
+         so_con_4so=None):
     # --- TASK 1: ngày hôm nay theo GIỜ VIỆT NAM (máy chủ Colab chạy giờ UTC) ---
     GIO_VN = timezone(timedelta(hours=7))
     ngay_moc = doc_ngay(ngay) if ngay else datetime.now(GIO_VN).date()
     so_ky = so_ky or SO_KY
     Ks = {"DB":  so_con_db  if so_con_db  is not None else SO_CON_DB,
           "LO2": so_con_lo2 if so_con_lo2 is not None else SO_CON_LO2,
-          "3SO": so_con_3so if so_con_3so is not None else SO_CON_3SO}
+          "3SO": so_con_3so if so_con_3so is not None else SO_CON_3SO,
+          "4SO": so_con_4so if so_con_4so is not None else SO_CON_4SO}
     if not any(Ks.values()):
         raise ValueError("Phải bật ít nhất một module")
 
@@ -1519,6 +1796,8 @@ def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None
     print("=" * 78)
     print(f"  XSMN v8  |  {thu} {ngay_moc:%d.%m.%Y} (giờ VN)  |  {so_ky} kỳ/đài")
     print(f"  Module: " + "  ".join(f"{MO_TA[k][0]}={v}" for k, v in Ks.items() if v))
+    _n = len(_chi_so_tin_hieu())
+    print(f"  Tín hiệu 2 số: bộ {BO_TIN_HIEU} — {_n} tín hiệu, {2**_n-1} tổ hợp dò")
     print("=" * 78)
 
     # --- TASK 2 + 3: tìm đài quay hôm nay, luôn kèm đài 36 Miền Bắc ---
@@ -1595,6 +1874,7 @@ def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None
                 bo = set(m["so"])
                 if m["key"] == "DB":    thuc = [g[0][-2:]]
                 elif m["key"] == "LO2": thuc = [x[-2:] for x in g]
+                elif m["key"] == "4SO": thuc = lo4_cua_ky(g)
                 else:                   thuc = lo3_cua_ky(g)
                 h = sum(1 for x in thuc if x in bo)
                 thu_ = h * m["tra"]; t_von += m["von"]; t_thu += thu_
@@ -1617,6 +1897,12 @@ def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None
             print(f"  {r['dai'].upper()}  —  {m['ten']}  ({m['K']} con)")
             print(f"  {thu} {ngay_moc:%d.%m.%Y}  |  {r['mien']}  |  {m['mo_ta']}")
             print(f"  Vốn {m['von']:,}  |  thưởng {m['tra']:.0f}/lần  |  p HỌ {m['p_ho']:.3f}")
+            if m["key"] == "4SO":
+                md = r["n_ky"] * m["mt"] / 10000
+                print(f"  ⚠ MẬT ĐỘ {md:.2f} mẫu/ô — thấp nhất trong mọi module. "
+                      f"~{10000*(1-1/10000)**(r['n_ky']*m['mt']):,.0f}/10.000 con chưa từng ra.")
+                print(f"  ⚠ EV = {TY_LE_TRA_4SO:.0f}/10000 − 1 = {TY_LE_TRA_4SO/10000-1:+.2%} "
+                      f"— tệ nhất trong mọi loại cược.")
             print("=" * 78)
             moi_hang = 10
             for i in range(0, len(m["so"]), moi_hang):
@@ -1647,8 +1933,11 @@ def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None
 #  Hai đường lãi/lỗ đặt cạnh nhau là phép so trực quan nhất, không cần p-value.
 # ==============================================================================
 
-def _trong_so_qua_khu(chuoi, pool, g3, t, key, loai, K, cap, min_train):
+def _trong_so_qua_khu(chuoi, pool, g3, t, key, loai, K, cap, min_train, g4=None):
     """Chọn trọng số CHỈ từ dữ liệu trước kỳ t."""
+    if loai == "4so":
+        w = precompute_windows_4(g4[:t], min_train=min_train, max_pts=None)
+        return toi_uu_trong_so_4(w, K, cap)[0] if w else np.ones(len(SIGNALS_4))
     if loai == "3so":
         w = precompute_windows_3(g3[:t], min_train=min_train, max_pts=None)
         return toi_uu_trong_so_3(w, K, cap)[0] if w else np.ones(len(SIGNALS_3))
@@ -1669,33 +1958,40 @@ def backtest_von(toan_giai, Ks, diem, khu="MN", min_train=30, chu_ky_toi_uu=5,
     n_lo2 = len(toan_giai[0]); n_lo3 = len(lo3_cua_ky(toan_giai[0]))
     pool = [[int(s[-2:]) for s in ky] for ky in toan_giai]
     g3   = [lo3_cua_ky(ky) for ky in toan_giai]
+    g4   = [lo4_cua_ky(ky) for ky in toan_giai]
     lo2_tien = SO_LO_2SO_MB if khu == "MB" else SO_LO_2SO_MN
     lo3_tien = SO_LO_3SO_MB if khu == "MB" else SO_LO_3SO_MN
     # (loại, chuỗi nguồn, số lô TÍNH TIỀN, không gian, tỷ lệ trả)
     CH = {"DB":  ("2so", [[k[0]] for k in toan_giai], 1,        100,  TY_LE_TRA_2SO),
           "LO2": ("2so", toan_giai,                   lo2_tien, 100,  TY_LE_TRA_2SO),
-          "3SO": ("3so", g3,                          lo3_tien, 1000, TY_LE_TRA_3SO)}
+          "3SO": ("3so", g3,                          lo3_tien, 1000, TY_LE_TRA_3SO),
+          "4SO": ("4so", g4, (SO_LO_4SO_MB if khu == "MB" else SO_LO_4SO_MN),
+                  10000, TY_LE_TRA_4SO)}
 
     ban_ghi = []
     w_luu = {}
     for t in range(min_train, n):
         hang = {"ky": t, "kq": toan_giai[t]}
-        for key in ["DB", "LO2", "3SO"]:
+        for key in ["DB", "LO2", "3SO", "4SO"]:
             if not Ks.get(key): continue
             loai, chuoi, n_mt, KG, tra = CH[key]
             K, d = Ks[key], diem[key]
-            cap = tinh_cap3(K) if loai == "3so" else tinh_cap(K)
+            cap = (tinh_cap4(K) if loai == "4so"
+                   else tinh_cap3(K) if loai == "3so" else tinh_cap(K))
             # --- chọn lại trọng số theo chu kỳ, CHỈ dùng dữ liệu quá khứ ---
             if (t - min_train) % chu_ky_toi_uu == 0 or key not in w_luu:
                 w_luu[key] = _trong_so_qua_khu(chuoi, pool, g3, t, key, loai,
-                                               K, cap, min_train)
+                                               K, cap, min_train, g4)
             w = w_luu[key]
             # --- dự báo kỳ t bằng dữ liệu < t ---
-            if loai == "3so":
+            if loai == "4so":
+                Z, _ = build_signal_matrix_4(g4[:t])
+                sel, _ = select_top4(w @ Z, K, cap)
+                thuc = [int(x) for x in g4[t]]
+            elif loai == "3so":
                 Z, _ = build_signal_matrix_3(g3[:t])
                 sel, _ = select_top3(w @ Z, K, cap)
                 thuc = [int(x) for x in g3[t]]
-                bo_nn = rng.choice(1000, K, replace=False)
             else:
                 Z, _ = ma_tran_tin_hieu(chuoi[:t], pool[:t])
                 sel, _ = select_top(w @ Z, K, cap)
@@ -1721,7 +2017,7 @@ def backtest_von(toan_giai, Ks, diem, khu="MN", min_train=30, chu_ky_toi_uu=5,
 
 
 def bao_cao_backtest(bg, Ks, diem, ten_dai=""):
-    keys = [k for k in ["DB", "LO2", "3SO"] if Ks.get(k)]
+    keys = [k for k in ["DB", "LO2", "3SO", "4SO"] if Ks.get(k)]
     nt = len(bg)
     print("\n" + "=" * 78)
     print(f"  BACKTEST LÃI/LỖ TRÊN DỮ LIỆU THẬT — {ten_dai}")
@@ -1754,9 +2050,10 @@ def bao_cao_backtest(bg, Ks, diem, ten_dai=""):
         thua_max = max(thua_max, thua)
     print(f"  Sụt vốn sâu nhất : {sut_max:,.0f} điểm")
     print(f"  Chuỗi thua dài nhất: {thua_max} kỳ liên tiếp")
-    ev_lt = sum((Ks[k]/(1000 if k=='3SO' else 100)) *
+    ev_lt = sum((Ks[k]/(10000 if k=='4SO' else 1000 if k=='3SO' else 100)) *
                 (bg[0][k]['von']/(Ks[k]*diem[k])) *
-                (TY_LE_TRA_3SO if k=='3SO' else TY_LE_TRA_2SO)*diem[k]
+                (TY_LE_TRA_4SO if k=='4SO' else
+                 TY_LE_TRA_3SO if k=='3SO' else TY_LE_TRA_2SO)*diem[k]
                 - bg[0][k]['von'] for k in keys) * nt
     print(f"  Kỳ vọng lý thuyết: {ev_lt:+,.0f} điểm  ({ev_lt/tv:+.2%})")
     print(f"  → Thực tế {tl:+,.0f} lệch {tl-ev_lt:+,.0f} so với kỳ vọng. "
@@ -1767,8 +2064,8 @@ def bao_cao_backtest(bg, Ks, diem, ten_dai=""):
 
 def chay_backtest(chon_dai=1, so_ky=100, Ks=None, diem=None, chu_ky_toi_uu=5):
     """Tải dữ liệu THẬT của 1 đài rồi chạy backtest lãi/lỗ đầy đủ."""
-    Ks = Ks or {"DB": 82, "LO2": 4, "3SO": 50}
-    diem = diem or {"DB": 5, "LO2": 2, "3SO": 1}
+    Ks = Ks or {"DB": SO_CON_DB, "LO2": SO_CON_LO2, "3SO": SO_CON_3SO, "4SO": SO_CON_4SO}
+    diem = diem or {"DB": DIEM_DB, "LO2": DIEM_LO2, "3SO": DIEM_3SO, "4SO": DIEM_4SO}
     ten, ma, mien, nd = lay_dai(chon_dai)
     m = lay_tu_master(chon_dai, so_ky)
     if m:
