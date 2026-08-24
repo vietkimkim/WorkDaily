@@ -2,7 +2,7 @@
 
   Mật khẩu ứng dụng: OK
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-08-23T22:28
+  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T06:17
   Đang tải các kỳ mới...
   Cập nhật 35 đài (tải 30 kỳ gần nhất mỗi đài)...
 
@@ -12,6 +12,49 @@
   XSMN v8  |  Thứ 2 24.08.2026 (giờ VN)  |  150 kỳ/đài
   Module: ① ĐỀ ĐẶC BIỆT=64  ③ LÔ 3 SỐ=50
 ==============================================================================
+  Đang dựng lịch quay 36 đài (chỉ làm 1 lần, ~1 phút)...
+      1. TP. Hồ Chí Minh        Thứ 7
+      2. An Giang               Thứ 5
+      3. Bạc Liêu               Thứ 3
+      4. Bến Tre                Thứ 3
+      5. Bình Dương             Thứ 6
+      6. Bình Phước             Thứ 7
+      7. Bình Thuận             Thứ 5
+      8. Cà Mau                 Thứ 2
+      9. Cần Thơ                Thứ 4
+     10. Đà Lạt (Lâm Đồng)      Chủ nhật
+     11. Đồng Nai               Thứ 4
+     12. Đồng Tháp              Thứ 2
+     13. Hậu Giang              Thứ 7
+     14. Kiên Giang             Chủ nhật
+     15. Long An                Thứ 7
+     16. Sóc Trăng              Thứ 4
+     17. Tây Ninh               Thứ 5
+     18. Tiền Giang             Chủ nhật
+     19. Trà Vinh               Thứ 6
+     20. Vĩnh Long              Thứ 6
+     21. Vũng Tàu               Thứ 3
+     22. Bình Định              Thứ 5
+     23. Đà Nẵng                Thứ 7
+     24. Đắk Lắk                Thứ 3
+     25. Đắk Nông               Thứ 7
+     26. Gia Lai                Thứ 6
+     27. Khánh Hòa              Chủ nhật
+     28. Kon Tum                Chủ nhật
+     29. Ninh Thuận             Thứ 6
+     30. Phú Yên                Thứ 2
+     31. Quảng Bình             Thứ 5
+     32. Quảng Nam              Thứ 3
+     33. Quảng Ngãi             Thứ 7
+     34. Quảng Trị              Thứ 5
+     35. Thành phố Huế          Chủ nhật
+     36. Miền Bắc (XSMB)        Chủ nhật
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  ⚠ CHỈ TÌM ĐƯỢC 3 ĐÀI cho Thứ 2, đáng lẽ có 5
+  → Xoá data/lich_quay.json rồi chạy lại workflow để dựng lại lịch.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
   Đài quay Thứ 2 24.08.2026: 4 đài
      [ 8] Cà Mau                  Miền Nam
@@ -19,13 +62,13 @@
      [30] Phú Yên                 Miền Trung
      [36] Miền Bắc (XSMB)         Miền Bắc
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T06:17
+  Kho dữ liệu: 35 đài, cập nhật 2026-08-24T07:38
 
   Đang phân tích...
-     ✓ [ 8] Cà Mau                    6.6s  (150 kỳ ≤ 17/08/2026, từ KHO)
+     ✓ [ 8] Cà Mau                    6.5s  (150 kỳ ≤ 17/08/2026, từ KHO)
      ✓ [12] Đồng Tháp                 6.9s  (150 kỳ ≤ 17/08/2026, từ KHO)
      ✓ [30] Phú Yên                   6.8s  (150 kỳ ≤ 17/08/2026, từ KHO)
-     ✓ [36] Miền Bắc (XSMB)           7.1s  (150 kỳ ≤ 23/08/2026, từ KHO)
+     ✓ [36] Miền Bắc (XSMB)           7.0s  (150 kỳ ≤ 23/08/2026, từ KHO)
 
 [A] TỔNG HỢP
   LƯU Ý: cột p HỌ dưới đây tính từ hit rate của backtest có RÒ RỈ chọn
