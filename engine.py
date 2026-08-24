@@ -949,17 +949,32 @@ def doc_ngay(s):
         raise ValueError(f"CHON_NGAY sai định dạng: {s!r}. Cần dd.mm.yyyy, ví dụ 23.08.2026")
 
 
-def _thu_cua_dai(stt):
-    """Suy thứ mở thưởng của 1 đài TỪ DỮ LIỆU THẬT (không hard-code lịch)."""
+def _thu_cua_dai(stt, n_mau=30):
+    """Suy TẬP các thứ mở thưởng của 1 đài TỪ DỮ LIỆU THẬT.
+
+    QUAN TRỌNG: nhiều đài quay HAI NGÀY MỘT TUẦN —
+        TP.HCM   : Thứ 2 + Thứ 7
+        Huế      : Chủ nhật + Thứ 2
+        Đà Nẵng  : Thứ 4 + Thứ 7
+        Khánh Hoà: Thứ 4 + Chủ nhật
+    Bản cũ dùng max() nên chỉ giữ được MỘT thứ, làm các đài này biến mất
+    khỏi lịch của ngày còn lại. Đây chính là lý do email chỉ có 4 đài.
+
+    Một thứ được tính là ngày quay nếu xuất hiện >= 15% số kỳ mẫu (tối thiểu 2 lần).
+    """
     _, ma, _, _ = lay_dai(stt)
-    html, _ = _tai_1_trang(ma, 10)
-    ds = [d for d in _gan_nam(_boc_ngay(html, 10)) if d]
+    html, _ = _tai_1_trang(ma, max(30, n_mau))
+    ds = [d for d in _gan_nam(_boc_ngay(html, n_mau)) if d]
     if not ds:
         raise RuntimeError("không đọc được ngày mở thưởng")
     dem = {}
     for d in ds:
         dem[d.weekday()] = dem.get(d.weekday(), 0) + 1
-    return max(dem, key=dem.get), len(ds)
+    nguong = max(2, int(0.15 * len(ds)))
+    cac_thu = sorted(w for w, c in dem.items() if c >= nguong)
+    if not cac_thu:                       # dữ liệu quá thưa -> lấy thứ hay gặp nhất
+        cac_thu = [max(dem, key=dem.get)]
+    return cac_thu, len(ds)
 
 
 def xay_lich(bat_buoc_lam_moi=False, im_lang=False):
@@ -983,10 +998,14 @@ def xay_lich(bat_buoc_lam_moi=False, im_lang=False):
         for stt in con_thieu:
             ten, ma, mien, _ = lay_dai(stt)
             try:
-                thu, nm = _thu_cua_dai(stt)
+                cac_thu, nm = _thu_cua_dai(stt)
                 lich[str(stt)] = {"ten": ten, "ma": ma, "mien": mien,
-                                  "thu": int(thu), "thu_vn": THU_VN[thu]}
-                if not im_lang: print(f"     {stt:>2}. {ten:<22} {THU_VN[thu]}")
+                                  "thu": int(cac_thu[0]),          # tương thích ngược
+                                  "cac_thu": [int(x) for x in cac_thu],
+                                  "thu_vn": ", ".join(THU_VN[x] for x in cac_thu)}
+                if not im_lang:
+                    print(f"     {stt:>2}. {ten:<22} "
+                          f"{', '.join(THU_VN[x] for x in cac_thu)}")
             except Exception as e:
                 lan_nay.append(stt)
                 if not im_lang: print(f"     {stt:>2}. {ten:<22} LỖI: {e}")
@@ -1009,8 +1028,9 @@ def xay_lich(bat_buoc_lam_moi=False, im_lang=False):
     return lich
 
 
-# Số đài quay mỗi thứ, KHÔNG kể Miền Bắc. Dùng để phát hiện lịch bị thiếu.
-SO_DAI_MOI_THU = {0: 5, 1: 5, 2: 5, 3: 6, 4: 5, 5: 7, 6: 5}   # T2..CN
+# Số đài MN/MT quay mỗi thứ (KHÔNG kể Miền Bắc), dùng làm CẬN DƯỚI để phát hiện
+# lịch bị thiếu. Đã tính cả các đài quay hai ngày/tuần.
+SO_DAI_MOI_THU = {0: 5, 1: 5, 2: 6, 3: 6, 4: 5, 5: 7, 6: 6}   # T2..CN
 
 
 def dai_theo_ngay(ngay, gom_mien_bac=True):
@@ -1018,7 +1038,7 @@ def dai_theo_ngay(ngay, gom_mien_bac=True):
     lich = xay_lich()
     thu = ngay.weekday()
     ra = [int(k) for k, v in lich.items()
-          if v["thu"] == thu and v["mien"] != "Miền Bắc"]
+          if thu in v.get("cac_thu", [v["thu"]]) and v["mien"] != "Miền Bắc"]
     uu_tien = {"Miền Nam": 0, "Miền Trung": 1, "Miền Bắc": 2}
     ra.sort(key=lambda s: (uu_tien[lich[str(s)]["mien"]], lich[str(s)]["ten"]))
     # --- Đối chiếu với số đài mong đợi, cảnh báo nếu thiếu ---
@@ -1716,11 +1736,15 @@ def tao_master(so_ky=200, chi_dai=None, nghi=0.8):
                 raise RuntimeError("không bóc được toàn bảng giải")
             ky = [{"ngay": d.isoformat() if d else None, "giai": g}
                   for d, g in zip(ngay_full, tg)]
-            thu = max({d.weekday() for d in ngay_full if d},
-                      key=lambda w: sum(1 for d in ngay_full if d and d.weekday() == w))
+            dem = {}
+            for d in ngay_full:
+                if d: dem[d.weekday()] = dem.get(d.weekday(), 0) + 1
+            ng = max(2, int(0.15 * sum(dem.values())))
+            cac_thu = sorted(w for w, c in dem.items() if c >= ng) or [max(dem, key=dem.get)]
             kho[str(stt)] = {"ten": ten, "ma": ma, "mien": mien,
                              "khu": "MB" if ma == "xsmb" else "MN",
-                             "thu": int(thu), "thu_vn": THU_VN[thu], "ky": ky}
+                             "thu": int(cac_thu[0]), "cac_thu": [int(x) for x in cac_thu],
+                             "thu_vn": ", ".join(THU_VN[x] for x in cac_thu), "ky": ky}
             print(f"     ✓ [{stt:>2}] {ten:<24}{len(ky):>4} kỳ  "
                   f"{ky[0]['ngay']} → {ky[-1]['ngay']}")
         except Exception as e:
@@ -1836,8 +1860,9 @@ def kiem_tra_do_moi(ngay_moc=None):
         ngays = [_date.fromisoformat(k["ngay"]) for k in d["ky"] if k["ngay"]]
         if not ngays: continue
         # kỳ gần nhất ĐÁNG LẼ phải có, theo lịch quay của đài
-        cach = (hom_nay.weekday() - d["thu"]) % 7
-        can_co = hom_nay - timedelta(days=cach if cach else 7)
+        cts = d.get("cac_thu", [d["thu"]])
+        can_co = max(hom_nay - timedelta(days=((hom_nay.weekday() - t) % 7) or 7)
+                     for t in cts)
         if max(ngays) < can_co:
             cu.append(f"[{stt}] {d['ten']}: mới nhất {max(ngays)}, đáng lẽ có {can_co}")
     if cu:
