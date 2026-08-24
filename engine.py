@@ -1254,10 +1254,21 @@ def chay_dai_v8(stt, ngay_moc, so_ky, Ks, cache, dung_master=True):
         du = min(200, so_ky + 40)
         _, ngay, ngay_full, toan_giai, info = lay_du_lieu(stt, du)
     if not toan_giai:
-        raise RuntimeError("không bóc được toàn bảng giải")
+        raise RuntimeError(
+            f"không bóc được toàn bảng giải. Bóc theo nhãn={info.get('n_FA')} kỳ, "
+            f"theo chữ ký độ dài={info.get('n_FB')} kỳ, dòng ĐB={info.get('n_A')} kỳ. "
+            f"Nếu cả 3 đều 0 thì trang {info.get('url')} đổi cấu trúc HTML. "
+            f"Nếu chỉ n_FA/n_FB = 0 thì cơ cấu giải của đài này khác chuẩn "
+            f"{sum(q for q,_ in CO_CAU_GIAI[info.get('khu','MN')].values())} số.")
+    n_co = len(toan_giai)
     tg, ng, that = cat_truoc_ngay(toan_giai, ngay_full, ngay_moc, so_ky)
     if len(tg) < 40:
-        raise RuntimeError(f"chỉ còn {len(tg)} kỳ trước {ngay_moc:%d.%m.%Y}")
+        ngays = [d for d in ngay_full if d]
+        raise RuntimeError(
+            f"chỉ còn {len(tg)} kỳ trước {ngay_moc:%d.%m.%Y} (cần >=40). "
+            f"Tải về {n_co} kỳ, khoảng ngày "
+            f"{min(ngays) if ngays else '?'} → {max(ngays) if ngays else '?'}. "
+            f"Có {sum(1 for d in ngay_full if d is None)} kỳ không đọc được ngày.")
 
     khu = "MB" if ma == "xsmb" else "MN"
     n = len(tg); n_lo2 = len(tg[0]); n_lo3 = len(lo3_cua_ky(tg[0]))
@@ -1376,8 +1387,14 @@ def html_v8(ket, ngay_moc, tong_von, tong_ev, loi, dong_dc):
         for d in dong_dc: h.append(f'<li>{d}</li>')
         h.append('</ul>')
     if loi:
-        h.append('<p style="color:#c62828;font-size:13px">Đài lỗi: '
-                 + ", ".join(f"[{s}] {t}" for s, t, _ in loi) + '</p>')
+        h.append('<div style="background:#ffebee;border-left:4px solid #c62828;'
+                 'padding:10px 13px;margin:18px 0;font-size:13px;line-height:1.6">'
+                 '<b>Đài chạy lỗi — KHÔNG có bộ số:</b><ul style="margin:6px 0">')
+        for s_, t_, e_ in loi:
+            h.append(f'<li><b>[{s_}] {t_}</b><br>'
+                     f'<span style="color:#666;font-family:monospace;font-size:12px">'
+                     f'{e_}</span></li>')
+        h.append('</ul></div>')
     h.append(f'<hr style="margin:26px 0 10px;border:0;border-top:1px solid #ddd">'
              f'<p style="font-size:12px;color:#888;line-height:1.6">'
              f'Kỳ vọng: đề/bao lô 2 số {TY_LE_TRA_2SO:.0f}/100 &minus; 1 = '
@@ -1481,7 +1498,9 @@ def main(ngay=None, so_ky=None, so_con_db=None, so_con_lo2=None, so_con_3so=None
                   f"{', từ KHO' if r.get('tu_kho') else ', từ WEB'}){kt}")
         except Exception as e:
             loi.append((s, ten, str(e)))
-            print(f"     ✗ [{s:>2}] {ten:<24}LỖI: {e}")
+            print(f"     ✗ [{s:>2}] {ten:<24}LỖI:")
+            for dong in str(e).split(". "):
+                if dong.strip(): print(f"          {dong.strip()}")
     if not ket:
         raise RuntimeError("Không đài nào chạy được.")
 
