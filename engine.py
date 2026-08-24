@@ -973,21 +973,44 @@ def xay_lich(bat_buoc_lam_moi=False, im_lang=False):
     if not im_lang:
         print("  Đang dựng lịch quay 36 đài (chỉ làm 1 lần, ~1 phút)...")
     lich = {}
-    for stt in range(1, len(DAI_LIST) + 1):
-        ten, ma, mien, _ = lay_dai(stt)
-        try:
-            thu, nm = _thu_cua_dai(stt)
-            lich[str(stt)] = {"ten": ten, "ma": ma, "mien": mien,
-                              "thu": int(thu), "thu_vn": THU_VN[thu]}
-            if not im_lang: print(f"     {stt:>2}. {ten:<22} {THU_VN[thu]}")
-        except Exception as e:
-            if not im_lang: print(f"     {stt:>2}. {ten:<22} LỖI: {e}")
-        time.sleep(0.5)
+    con_thieu = list(range(1, len(DAI_LIST) + 1))
+    for vong in range(3):                       # thử tối đa 3 vòng
+        if not con_thieu:
+            break
+        if vong and not im_lang:
+            print(f"  Thử lại {len(con_thieu)} đài lỗi (vòng {vong+1}/3)...")
+        lan_nay = []
+        for stt in con_thieu:
+            ten, ma, mien, _ = lay_dai(stt)
+            try:
+                thu, nm = _thu_cua_dai(stt)
+                lich[str(stt)] = {"ten": ten, "ma": ma, "mien": mien,
+                                  "thu": int(thu), "thu_vn": THU_VN[thu]}
+                if not im_lang: print(f"     {stt:>2}. {ten:<22} {THU_VN[thu]}")
+            except Exception as e:
+                lan_nay.append(stt)
+                if not im_lang: print(f"     {stt:>2}. {ten:<22} LỖI: {e}")
+            time.sleep(0.5 if vong == 0 else 2.0)
+        con_thieu = lan_nay
+
+    if con_thieu:
+        # KHÔNG im lặng bỏ qua — đài thiếu sẽ biến mất khỏi MỌI lần chạy sau
+        print("\n" + "!" * 74)
+        print(f"  ⚠ THIẾU {len(con_thieu)}/36 ĐÀI TRONG LỊCH QUAY")
+        for stt in con_thieu:
+            print(f"      [{stt:>2}] {DAI_LIST[stt-1][0]}  (mã {DAI_LIST[stt-1][1]})")
+        print("  Các đài này sẽ KHÔNG BAO GIỜ được dự báo cho tới khi lịch được dựng lại.")
+        print("  Cách sửa: xoá data/lich_quay.json rồi chạy lại workflow.")
+        print("!" * 74 + "\n")
     os.makedirs(os.path.dirname(_LICH_FILE) or ".", exist_ok=True)
     json.dump({"tao_luc": time.strftime("%Y-%m-%d %H:%M"), "lich": lich},
               open(_LICH_FILE, "w"), ensure_ascii=False, indent=1)
     _LICH_MEM = lich
     return lich
+
+
+# Số đài quay mỗi thứ, KHÔNG kể Miền Bắc. Dùng để phát hiện lịch bị thiếu.
+SO_DAI_MOI_THU = {0: 5, 1: 5, 2: 5, 3: 6, 4: 5, 5: 7, 6: 5}   # T2..CN
 
 
 def dai_theo_ngay(ngay, gom_mien_bac=True):
@@ -998,6 +1021,19 @@ def dai_theo_ngay(ngay, gom_mien_bac=True):
           if v["thu"] == thu and v["mien"] != "Miền Bắc"]
     uu_tien = {"Miền Nam": 0, "Miền Trung": 1, "Miền Bắc": 2}
     ra.sort(key=lambda s: (uu_tien[lich[str(s)]["mien"]], lich[str(s)]["ten"]))
+    # --- Đối chiếu với số đài mong đợi, cảnh báo nếu thiếu ---
+    mong_doi = SO_DAI_MOI_THU.get(thu)
+    if mong_doi and len(ra) < mong_doi:
+        co = {int(k) for k in lich}
+        vang = [s for s in range(1, 36) if s not in co]
+        print("\n" + "!" * 74)
+        print(f"  ⚠ CHỈ TÌM ĐƯỢC {len(ra)} ĐÀI cho {THU_VN[thu]}, đáng lẽ có {mong_doi}")
+        if vang:
+            print(f"  Lịch quay đang THIẾU {len(vang)} đài (không quét được lúc dựng lịch):")
+            for s2 in vang:
+                print(f"      [{s2:>2}] {DAI_LIST[s2-1][0]}")
+        print("  → Xoá data/lich_quay.json rồi chạy lại workflow để dựng lại lịch.")
+        print("!" * 74 + "\n")
     if gom_mien_bac and 36 not in ra:
         ra.append(36)
     return ra
@@ -1691,6 +1727,30 @@ def tao_master(so_ky=200, chi_dai=None, nghi=0.8):
             loi.append((stt, ten, str(e)))
             print(f"     ✗ [{stt:>2}] {ten:<24}LỖI: {e}")
         time.sleep(nghi)
+
+    # --- Thử lại các đài lỗi, chậm hơn ---
+    for vong in range(2):
+        if not loi: break
+        print(f"\n  Thử lại {len(loi)} đài lỗi (vòng {vong+1}/2)...")
+        con = []
+        for stt, ten, _ in loi:
+            try:
+                _, ngay, ngay_full, tg, info = lay_du_lieu(stt, so_ky)
+                if not tg: raise RuntimeError("không bóc được toàn bảng giải")
+                ky = [{"ngay": d.isoformat() if d else None, "giai": g}
+                      for d, g in zip(ngay_full, tg)]
+                thu = max({d.weekday() for d in ngay_full if d},
+                          key=lambda w: sum(1 for d in ngay_full if d and d.weekday() == w))
+                ma = DAI_LIST[stt-1][1]; mien = DAI_LIST[stt-1][2]
+                kho[str(stt)] = {"ten": ten, "ma": ma, "mien": mien,
+                                 "khu": "MB" if ma == "xsmb" else "MN",
+                                 "thu": int(thu), "thu_vn": THU_VN[thu], "ky": ky}
+                print(f"     ✓ [{stt:>2}] {ten:<24}{len(ky):>4} kỳ (lần thử lại)")
+            except Exception as e:
+                con.append((stt, ten, str(e)))
+                print(f"     ✗ [{stt:>2}] {ten:<24}{e}")
+            time.sleep(2.5)
+        loi = con
 
     kho_full = {"tao_luc": datetime.now(timezone(timedelta(hours=7))).isoformat(),
                 "so_ky": so_ky, "dai": kho,
