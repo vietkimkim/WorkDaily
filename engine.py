@@ -45,7 +45,7 @@ from itertools import product
 # ①②③ Số con mỗi module. Đặt 0 để tắt module đó.
 SO_KY       = 150            # số kỳ dữ liệu huấn luyện mỗi đài
 SO_CON_DB   = 64             # ① ĐỀ ĐẶC BIỆT : 2 số cuối giải ĐB        (0 = tắt)
-SO_CON_LO2  = 0              # ② BAO LÔ 2 SỐ : 2 số cuối của MỌI giải   (0 = tắt)
+SO_CON_LO2  = 20              # ② BAO LÔ 2 SỐ : 2 số cuối của MỌI giải   (0 = tắt)
 SO_CON_3SO  = 50             # ③ LÔ 3 SỐ     : 3 số cuối của mọi giải   (0 = tắt)
 SO_CON_4SO  = 0              # ④ LÔ 4 SỐ     : 4 số cuối của mọi giải   (0 = tắt)
                              #    ⚠ EV -11,12% — TỆ NHẤT. Mật độ 0,30 mẫu/ô.
