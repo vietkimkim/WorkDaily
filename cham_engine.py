@@ -45,6 +45,8 @@ SO_KY_CHAM   = 150    # số kỳ lịch sử. 150 = mặc định: overfit gi�
 SO_CHAM      = 4      # số chạm mỗi giải. 3 chạm phủ 51 số, 4 phủ 64, 5 phủ 75
 CHAY_DB      = True   # ① Đề Đặc Biệt
 CHAY_G1      = True   # ② Đề Giải Nhất
+CHAY_G8      = True   # ③ ĐỀ ĐẦU (giải 8) — CHỈ Miền Nam/Trung, đài 36 tự bỏ qua
+                      #    G8 đã LÀ số 2 chữ số, không phải cắt gì
 MIN_TRAIN    = 15     # số kỳ tối thiểu trước khi chấm cầu chạm
 N_NULL       = 200    # (giữ cho hàm null_best_of_210 cũ)
 N_NULL_WF    = 25     # số lượt null control WALK-FORWARD — phép so đúng
@@ -420,8 +422,19 @@ def null_wf_mo_hinh(n_ky, khu, w_phu, n_lap=25, seed=2026):
 #  CHẠY 1 ĐÀI
 # ==============================================================================
 
-MO_TA = {0: ("① ĐỀ ĐẶC BIỆT", "2 chữ số CUỐI của giải ĐẶC BIỆT"),
-         1: ("② ĐỀ GIẢI NHẤT", "2 chữ số CUỐI của giải NHẤT")}
+MO_TA = {0:  ("① ĐỀ ĐẶC BIỆT", "2 chữ số CUỐI của giải ĐẶC BIỆT"),
+         1:  ("② ĐỀ GIẢI NHẤT", "2 chữ số CUỐI của giải NHẤT"),
+         -1: ("③ ĐỀ ĐẦU (G8)", "giải TÁM — bản thân nó đã là số 2 chữ số")}
+
+
+def _vi_tri_g8(toan_giai):
+    """Vị trí giải 8 trong bảng. MN/MT: phần tử CUỐI (index 17).
+       Miền Bắc không có G8 -> trả None."""
+    if len(toan_giai[0]) != 18:          # MB có 27 số, không có G8
+        return None
+    if len(toan_giai[0][-1]) != 2:       # kiểm tra chắc chắn là số 2 chữ số
+        return None
+    return len(toan_giai[0]) - 1
 
 
 def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
@@ -442,8 +455,13 @@ def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
     if len(tg) < 30:
         raise RuntimeError(f"chỉ còn {len(tg)} kỳ trước {ngay_moc:%d.%m.%Y}, cần >=30")
 
+    vt_g8 = _vi_tri_g8(tg)
+    danh_sach = [(0, CHAY_DB, 0), (1, CHAY_G1, 1)]
+    if CHAY_G8 and vt_g8 is not None:
+        danh_sach.append((vt_g8, True, -1))     # khoá MO_TA là -1
+
     mods = []
-    for vi_tri, bat in [(0, CHAY_DB), (1, CHAY_G1)]:
+    for vi_tri, bat, khoa_mota in danh_sach:
         if not bat:
             continue
         mt = [int(ky[vi_tri][-2:]) for ky in tg]
@@ -467,7 +485,7 @@ def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
         moc = 1 - p_truot
         hoa_von = (100 * (1 - p_truot)) / TY_LE_TRA
         mods.append({
-            "vi_tri": vi_tri, "ten": MO_TA[vi_tri][0], "mo_ta": MO_TA[vi_tri][1],
+            "vi_tri": vi_tri, "ten": MO_TA[khoa_mota][0], "mo_ta": MO_TA[khoa_mota][1],
             "cham": list(bo), "so": so_cua_cham(bo), "n_so": int(100 * moc),
             "hit_rate": hr, "hit_in_sample": _hr_in, "n_wf": n_wf,
             "trong_so": (["C1_TanSuat (mô hình)"] +
@@ -483,6 +501,7 @@ def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
     return {"stt": stt, "dai": ten, "mien": mien, "nguon": nguon, "n_ky": len(tg),
             "ngay_ky_truoc": ng[-1].strftime("%d/%m/%Y"),
             "db_ky_truoc": tg[-1][0], "g1_ky_truoc": tg[-1][1],
+            "g8_ky_truoc": tg[-1][vt_g8] if vt_g8 is not None else None,
             "modules": mods, "ket_qua_that": that}
 
 
@@ -518,7 +537,8 @@ def _html(ket, ngay_moc, loi):
                  f' &nbsp;|&nbsp; {thu} {ngay_moc:%d.%m.%Y}</span><br>'
                  f'<span style="font-size:12px;opacity:.7">Kỳ gần nhất '
                  f'{r["ngay_ky_truoc"]} · ĐB {r["db_ky_truoc"]} · G1 {r["g1_ky_truoc"]}'
-                 f' · {r["n_ky"]} kỳ</span></div>')
+                 + (f' · G8 {r["g8_ky_truoc"]}' if r.get("g8_ky_truoc") else '')
+                 + f' · {r["n_ky"]} kỳ</span></div>')
         h.append('<div style="border:1px solid #cfd8dc;border-top:0;'
                  'border-radius:0 0 5px 5px;padding:4px 12px 12px">')
         for m in r["modules"]:
