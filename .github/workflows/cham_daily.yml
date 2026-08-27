@@ -1,0 +1,54 @@
+name: XSMN 4 chạm 6h sáng
+
+on:
+  schedule:
+    - cron: '20 23 * * *'    # 23:20 UTC = 06:20 giờ Việt Nam
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: xsmn-cham
+  cancel-in-progress: false
+
+jobs:
+  cham:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      - name: Kiểm tra truy cập nguồn dữ liệu
+        run: |
+          python -c "
+          import requests, sys
+          H = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
+          r = requests.get('https://xskt.com.vn/xstv/10-ngay', headers=H, timeout=30)
+          print('HTTP', r.status_code, '|', len(r.text), 'bytes')
+          sys.exit(0 if r.status_code == 200 and len(r.text) > 5000 else 'Nguon du lieu chan')
+          "
+
+      - name: Chạy 4 chạm và gửi email
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_TO:   ${{ secrets.MAIL_TO }}
+        run: python -u cham_daily.py 2>&1 | tee cham_bao_cao.txt
+
+      - name: Lưu log vào repo
+        if: always()
+        run: |
+          git config user.name  "xsmn-bot"
+          git config user.email "actions@github.com"
+          mkdir -p log
+          cp -f cham_bao_cao.txt "log/cham4-$(date -u -d '+7 hours' +%Y-%m-%d).txt" 2>/dev/null || true
+          git add -A data log 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "4 chạm $(date -u -d '+7 hours' +%Y-%m-%d)"
+          git pull --rebase --autostash || true
+          git push || true
