@@ -2,17 +2,10 @@
 
   Mật khẩu ứng dụng: OK
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-08-27T13:36
+  Kho dữ liệu: 35 đài, cập nhật 2026-08-28T13:55
   Cập nhật 35 đài (tải 20 kỳ gần nhất mỗi đài)...
-     + [ 2] An Giang              1 kỳ mới → mới nhất 2026-08-27
-     + [ 7] Bình Thuận            1 kỳ mới → mới nhất 2026-08-27
-     + [17] Tây Ninh              1 kỳ mới → mới nhất 2026-08-27
-     + [22] Bình Định             1 kỳ mới → mới nhất 2026-08-27
-     + [31] Quảng Bình            1 kỳ mới → mới nhất 2026-08-27
-     + [34] Quảng Trị             1 kỳ mới → mới nhất 2026-08-27
-     + [36] Miền Bắc (XSMB)       1 kỳ mới → mới nhất 2026-08-27
 
-  Xong. Thêm 7 kỳ mới.
+  Xong. Thêm 0 kỳ mới.
 
 ==============================================================================
   4 CHẠM  |  Thứ 6 28.08.2026 (giờ VN)  |  150 kỳ
