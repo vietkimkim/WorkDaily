@@ -2,7 +2,7 @@
 
   Mật khẩu ứng dụng: OK
 
-  Kho dữ liệu: 35 đài, cập nhật 2026-09-02T08:01
+  Kho dữ liệu: 35 đài, cập nhật 2026-09-02T08:06
   Cập nhật 35 đài (tải 20 kỳ gần nhất mỗi đài)...
 
   Xong. Thêm 0 kỳ mới.
