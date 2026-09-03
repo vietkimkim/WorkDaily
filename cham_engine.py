@@ -41,14 +41,20 @@ VN = timezone(timedelta(hours=7))
 #  └──────────────────────────────────────────────────────────────────────┘
 # ==============================================================================
 
-SO_KY_CHAM   = 150    # số kỳ lịch sử
-SO_CHAM      = 4      # 3 chạm phủ 51 số · 4 phủ 64 · 5 phủ 75
+SO_KY_CHAM   = 10     # số kỳ lịch sử. 10 = chỉ nhìn cầu ĐANG chạy gần đây.
+                      # ⚠ 10 kỳ -> 9 lần kiểm chứng/cầu. Cầu "mạnh nhất" trong
+                      #   13 vị trí đạt 42% CHỈ DO MAY (mốc thật 19%).
+                      #   Đo trên nhiễu: cầu chạm 52,1% vs bốc bừa 51,8% -> chênh
+                      #   0,3 điểm, nằm trong sai số ±1,1%. KHÔNG phân biệt được.
+SO_CHAM      = 3      # 3 chạm phủ 51 số (mốc 51,00%, hoà vốn 51/95 = 53,68%)
+                      # Thắng +44 / thua -51 -> tỷ lệ 0,86, tốt hơn hẳn 4 chạm (0,48)
 CHAY_DB      = True   # ① Đề Đặc Biệt
 CHAY_G1      = True   # ② Đề Giải Nhất
 CHAY_G8      = True   # ③ Đề Đầu (giải 8) — chỉ MN/MT, Miền Bắc tự bỏ qua
 
 # --- Trọng số thời gian: khai theo MỐC 6 THÁNG, không phải số kỳ ---
-CON_LAI_6TH  = 0.10   # kỳ cách 6 tháng còn 10% trọng số. Nhỏ = ưu tiên gần hơn
+CON_LAI_6TH  = 0.10   # với 10 kỳ, trọng số thời gian gần như không tác dụng —
+                      # 10 kỳ đài tuần chỉ là 2,3 tháng, mọi kỳ đều "gần"
 
 # --- Nguồn vị trí cầu ---
 NGUON_CAU    = "GON"  # "GON" = chỉ ĐB+G1(+G8): 10-12 vị trí, ÍT OVERFIT
@@ -56,9 +62,9 @@ NGUON_CAU    = "GON"  # "GON" = chỉ ĐB+G1(+G8): 10-12 vị trí, ÍT OVERFIT
                       #         nhưng ngưỡng nhiễu cao hơn hẳn
 
 TOP_CAU      = 5      # số cầu tốt nhất được bỏ phiếu
-MIN_KY       = 30
+MIN_KY       = 8      # tối thiểu để chạy được
 N_NULL       = 2000
-N_BOOTSTRAP  = 150
+N_BOOTSTRAP  = 300
 BO_BOT       = 0.20
 TY_LE_TRA    = 95.0
 
@@ -196,7 +202,7 @@ def chon_cham(q, muc_tieu, w_th, k=SO_CHAM, top=TOP_CAU):
 
 def chon_trong_so(toan_giai, muc_tieu, vt_g8, h, k=SO_CHAM):
     """Trọng số do WALK-FORWARD chọn. 31 tổ hợp nhị phân."""
-    n = len(muc_tieu); mt = max(MIN_KY, n // 2)
+    n = len(muc_tieu); mt = max(4, n // 2)
     best = (None, -1.0, 0)
     for w_th in itertools.product([0.0, 1.0], repeat=5):
         if sum(w_th) == 0:
@@ -306,6 +312,7 @@ def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
                      "deu": float(q["deu"][j]), "chuoi_nay": int(q["chuoi_nay"][j])}
                     for j in tot],
             "n_test": q["n_test"],
+            "_tong_hit": int(q["hit"].sum()), "_tong_qs": int(q["hit"].size),
         })
 
     return {"stt": stt, "dai": ten, "mien": mien, "nguon": nguon, "n_ky": len(tg),
@@ -314,6 +321,37 @@ def chay_dai(stt, ngay_moc, so_ky=None, so_cham=None):
             "db_ky_truoc": tg[-1][0], "g1_ky_truoc": tg[-1][1],
             "g8_ky_truoc": tg[-1][vt_g8] if vt_g8 is not None else None,
             "modules": mods, "ket_qua_that": that}
+
+
+# ==============================================================================
+#  KIỂM ĐỊNH GỘP LAG-1 — gộp MỌI đài trong ngày
+#
+#  Với 10 kỳ mỗi đài, riêng lẻ không đủ mẫu. Nhưng gộp 6 đài × 3 giải × 13 vị trí
+#  × 9 lần kiểm chứng = ~2.100 quan sát -> ĐỦ để trả lời câu hỏi gốc:
+#
+#      "Chữ số của kỳ TRƯỚC có làm chạm cho kỳ SAU nhiều hơn 19% không?"
+#
+#  Đây là MỘT phép kiểm định trên toàn bộ dữ liệu, không phải dò 13 cầu rồi lấy
+#  cái tốt nhất -> KHÔNG bị vấn đề so sánh bội.
+# ==============================================================================
+
+def kiem_dinh_gop(ket):
+    """Gộp mọi (đài × giải) trong ngày, kiểm định lag-1 có tồn tại không."""
+    tong_hit = tong_qs = 0
+    for r in ket:
+        for m in r["modules"]:
+            tong_hit += m.get("_tong_hit", 0)
+            tong_qs += m.get("_tong_qs", 0)
+    if tong_qs == 0:
+        return None
+    p0 = 1 - 0.81
+    hr = tong_hit / tong_qs
+    se = (p0 * (1 - p0) / tong_qs) ** 0.5
+    z = (hr - p0) / se if se > 0 else 0.0
+    from math import erfc
+    p = erfc(abs(z) / (2 ** 0.5))
+    return {"hit": tong_hit, "qs": tong_qs, "hr": hr, "p0": p0,
+            "z": z, "p_value": p, "se": se}
 
 
 # ==============================================================================
@@ -472,6 +510,19 @@ def main(ngay=None, so_ky=None, so_cham=None, gui_mail=True):
             print(f"     ✗ [{s:>2}] {ten:<20} LỖI: {e}")
     if not ket:
         raise RuntimeError("Không đài nào chạy được.")
+
+    kdg = kiem_dinh_gop(ket)
+    if kdg:
+        print(f"\n[0] KIỂM ĐỊNH GỘP LAG-1  —  gộp MỌI đài × giải trong ngày")
+        print("-" * 78)
+        print(f"  Câu hỏi: chữ số kỳ TRƯỚC có làm chạm kỳ SAU nhiều hơn {kdg['p0']:.0%} không?")
+        print(f"  Quan sát: {kdg['hit']:,}/{kdg['qs']:,} = {kdg['hr']:.2%}  "
+              f"(mốc độc lập {kdg['p0']:.2%}, sai số {kdg['se']:.3%})")
+        print(f"  z = {kdg['z']:+.2f}   p = {kdg['p_value']:.4f}")
+        print("  → " + ("CÓ liên hệ lag-1. Đây là bằng chứng cầu tồn tại — đáng đào sâu."
+                        if kdg["p_value"] < .05 and kdg["z"] > 0 else
+                        "KHÔNG có liên hệ lag-1. Chữ số kỳ trước không dự báo được chạm kỳ sau."))
+        print(f"  (1 phép kiểm định trên toàn bộ dữ liệu — KHÔNG bị so sánh bội)")
 
     print(f"\n[A] CẤU TRÚC CẦU CÓ TỒN TẠI KHÔNG  (1 phép kiểm định/giải, không so sánh bội)")
     print("-" * 78)
