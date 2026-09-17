@@ -1,1 +1,64 @@
+name: 12 Engine Thống Kê — 6h sáng
 
+on:
+  schedule:
+    - cron: '0 23 * * *'     # 23:00 UTC = 06:00 giờ VN
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: de-daily
+  cancel-in-progress: false
+
+jobs:
+  chay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      - name: Kiểm tra truy cập nguồn dữ liệu
+        run: |
+          python -c "
+          import requests, sys
+          H = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
+          r = requests.get('https://xskt.com.vn/xstv/10-ngay', headers=H, timeout=30)
+          print('HTTP', r.status_code, '|', len(r.text), 'bytes')
+          sys.exit(0 if r.status_code == 200 and len(r.text) > 5000 else 'Nguon du lieu chan')
+          "
+
+      - name: 64 con ĐỀ (ĐB · G1 · G8)
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_TO:   ${{ secrets.MAIL_TO }}
+        run: python -u de_daily.py DE 2>&1 | tee de_bao_cao.txt
+
+      - name: 20 con BAO LÔ (MN/MT)
+        if: always()
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_TO:   ${{ secrets.MAIL_TO }}
+        run: python -u de_daily.py LO 2>&1 | tee lo_bao_cao.txt
+
+      - name: Lưu log vào repo
+        if: always()
+        run: |
+          git config user.name  "de-bot"
+          git config user.email "actions@github.com"
+          mkdir -p log
+          D=$(date -u -d '+7 hours' +%Y-%m-%d)
+          cp -f de_bao_cao.txt "log/de-$D.txt" 2>/dev/null || true
+          cp -f lo_bao_cao.txt "log/lo-$D.txt" 2>/dev/null || true
+          git add -A data log 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "12 engine $D"
+          git pull --rebase --autostash || true
+          git push || true
