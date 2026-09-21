@@ -1,0 +1,461 @@
+=== 12 ENGINE THỐNG KÊ — DE — 21.09.2026 (giờ VN) ===
+
+  Mật khẩu ứng dụng: OK
+
+  Kho: 36 đài, cập nhật 2026-09-20T08:01
+  Cập nhật 36 đài (tải 20 kỳ gần nhất mỗi đài)...
+     + [10] Đà Lạt (Lâm Đồng)     1 kỳ mới → mới nhất 2026-09-20
+     + [14] Kiên Giang            1 kỳ mới → mới nhất 2026-09-20
+     + [18] Tiền Giang            1 kỳ mới → mới nhất 2026-09-20
+     + [27] Khánh Hòa             1 kỳ mới → mới nhất 2026-09-20
+     + [28] Kon Tum               1 kỳ mới → mới nhất 2026-09-20
+     + [35] Thành phố Huế         1 kỳ mới → mới nhất 2026-09-20
+     + [36] Miền Bắc (XSMB)       1 kỳ mới → mới nhất 2026-09-20
+
+  Xong. Thêm 7 kỳ mới.
+
+================================================================================
+  64 CON ĐỀ — 12 ENGINE THỐNG KÊ  |  Thứ 2 21.09.2026
+  100 kỳ · gộp 4 engine hàng đầu
+================================================================================
+
+  Đài hôm nay: 6
+     ✓ [ 8] Cà Mau               100 kỳ (KHO) | p=0.79
+     ✓ [ 1] TP. Hồ Chí Minh      100 kỳ (KHO) | p=1.00
+     ✓ [12] Đồng Tháp            100 kỳ (KHO) | p=0.64
+     ✓ [30] Phú Yên              100 kỳ (KHO) | p=0.00
+     ✓ [35] Thành phố Huế        100 kỳ (KHO) | p=0.47
+     ✓ [36] Miền Bắc (XSMB)      100 kỳ (KHO) | p=0.06
+
+[A] ENGINE NÀO MẠNH — gộp mọi đài hôm nay
+--------------------------------------------------------------------------------
+  Engine                   Loại   Hit toàn kỳ
+  --------------------------------------------------
+  D01_Dirichlet           Bayes        64.9%
+  D04_RecencyML       thời gian        64.9%
+  D05_MarkovShrink       Markov        64.9%
+  D10_MinVariance       ổn định        64.9%
+  D06_CrossPrize       gộp giải        64.9%
+  D02_JamesStein        co ngót        64.2%
+  D09_KernelSmooth     làm mượt        64.2%
+  D08_DigitIndep        độc lập        63.7%
+  D11_GapHazard       ĐỐI CHỨNG        63.5%  ← ĐỐI CHỨNG
+  D03_JelinekJoint      nội suy        63.2%
+  D07_Hierarchy       phân tầng        63.1%
+  D12_Uniform         ĐỐI CHỨNG        61.7%  ← ĐỐI CHỨNG
+
+  Hạng trung bình của 2 ĐỐI CHỨNG: 6.9/12  (ngẫu nhiên = 6,5)
+  → Đối chứng xếp dưới trung bình — có dấu hiệu engine thật hơn nhiễu.
+
+================================================================================
+  CÀ MAU  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  00,01,02,03,04,05,06,07,09,10,11,12,13,14,15,16,17,21,22,23,24,25,26,27,29,30,32,33,34,35,36,37,38,39,40,43,45,46,47,48,53,54,57,58,59,63,67,72,73,74,76,77,85,86,87,88,90,91,92,95,96,97,98,99
+
+  Gộp từ: D02_JamesStein(70%) · D09_KernelSmooth(80%) · D11_GapHazard(80%) · D01_Dirichlet(70%)
+  Đạt 75.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.791
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D02_JamesStein        co ngót     73%     70% ←
+    2 D09_KernelSmooth     làm mượt     65%     80% ←
+    3 D11_GapHazard       ĐỐI CHỨNG     65%     80% ←
+    4 D01_Dirichlet           Bayes     71%     70% ←
+    5 D04_RecencyML       thời gian     71%     70%
+    6 D05_MarkovShrink       Markov     71%     70%
+    7 D10_MinVariance       ổn định     71%     70%
+    8 D03_JelinekJoint      nội suy     61%     80%
+    9 D07_Hierarchy       phân tầng     67%     70%
+   10 D12_Uniform         ĐỐI CHỨNG     64%     70% ⚠ĐC
+   11 D06_CrossPrize       gộp giải     60%     70%
+   12 D08_DigitIndep        độc lập     59%     60%
+
+================================================================================
+  CÀ MAU  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  03,04,12,13,14,15,16,17,19,23,24,25,27,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,47,48,49,50,52,53,54,55,57,58,59,60,61,62,63,64,65,66,67,68,69,72,73,81,82,83,84,85,87,92,93,94,95,97
+
+  Gộp từ: D09_KernelSmooth(90%) · D03_JelinekJoint(80%) · D08_DigitIndep(80%) · D01_Dirichlet(80%)
+  Đạt 82.5% trong 10 kỳ gần | ảo giác 78.2% | p = 0.294
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D09_KernelSmooth     làm mượt     76%     90% ←
+    2 D03_JelinekJoint      nội suy     73%     80% ←
+    3 D08_DigitIndep        độc lập     72%     80% ←
+    4 D01_Dirichlet           Bayes     65%     80% ←
+    5 D02_JamesStein        co ngót     65%     80%
+    6 D04_RecencyML       thời gian     65%     80%
+    7 D05_MarkovShrink       Markov     65%     80%
+    8 D10_MinVariance       ổn định     65%     80%
+    9 D12_Uniform         ĐỐI CHỨNG     63%     70% ⚠ĐC
+   10 D06_CrossPrize       gộp giải     68%     60%
+   11 D11_GapHazard       ĐỐI CHỨNG     57%     60% ⚠ĐC
+   12 D07_Hierarchy       phân tầng     65%     40%
+
+================================================================================
+  CÀ MAU  —  ③ ĐỀ ĐẦU (G8)
+================================================================================
+
+  04,05,06,08,11,12,14,15,16,19,20,23,24,27,28,30,32,33,34,35,37,41,42,43,46,48,49,50,51,54,56,57,58,59,61,62,64,65,66,67,68,69,72,74,76,77,78,80,81,83,84,85,87,88,89,90,91,92,93,94,95,96,97,98
+
+  Gộp từ: D11_GapHazard(90%) · D06_CrossPrize(70%) · D02_JamesStein(70%) · D12_Uniform(70%)
+  Đạt 75.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.791
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D11_GapHazard       ĐỐI CHỨNG     69%     90% ←
+    2 D06_CrossPrize       gộp giải     67%     70% ←
+    3 D02_JamesStein        co ngót     65%     70% ←
+    4 D12_Uniform         ĐỐI CHỨNG     63%     70% ←
+    5 D07_Hierarchy       phân tầng     61%     70%
+    6 D03_JelinekJoint      nội suy     64%     60%
+    7 D01_Dirichlet           Bayes     64%     50%
+    8 D04_RecencyML       thời gian     64%     50%
+    9 D05_MarkovShrink       Markov     64%     50%
+   10 D10_MinVariance       ổn định     64%     50%
+   11 D08_DigitIndep        độc lập     63%     50%
+   12 D09_KernelSmooth     làm mượt     63%     50%
+
+================================================================================
+  TP. HỒ CHÍ MINH  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  03,04,05,06,08,09,10,11,12,13,15,16,17,18,19,20,22,23,24,27,28,30,31,32,33,34,35,37,38,39,40,41,42,43,44,45,47,48,50,51,52,54,55,56,58,61,64,65,67,68,69,70,71,74,78,79,80,87,89,90,91,94,96,99
+
+  Gộp từ: D09_KernelSmooth(60%) · D01_Dirichlet(60%) · D04_RecencyML(60%) · D05_MarkovShrink(60%)
+  Đạt 60.0% trong 10 kỳ gần | ảo giác 78.2% | p = 1.000
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D09_KernelSmooth     làm mượt     71%     60% ←
+    2 D01_Dirichlet           Bayes     65%     60% ←
+    3 D04_RecencyML       thời gian     65%     60% ←
+    4 D05_MarkovShrink       Markov     65%     60% ←
+    5 D10_MinVariance       ổn định     65%     60%
+    6 D07_Hierarchy       phân tầng     56%     70%
+    7 D06_CrossPrize       gộp giải     72%     40%
+    8 D11_GapHazard       ĐỐI CHỨNG     60%     60% ⚠ĐC
+    9 D02_JamesStein        co ngót     53%     60%
+   10 D08_DigitIndep        độc lập     59%     50%
+   11 D03_JelinekJoint      nội suy     57%     50%
+   12 D12_Uniform         ĐỐI CHỨNG     63%     40% ⚠ĐC
+
+================================================================================
+  TP. HỒ CHÍ MINH  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  00,01,02,03,04,05,06,07,08,09,11,13,14,16,17,18,20,22,24,25,26,27,32,34,38,41,42,45,46,47,48,50,52,54,58,59,60,61,62,63,65,66,67,68,69,71,72,74,75,78,79,80,81,82,83,84,85,86,87,90,91,95,96,99
+
+  Gộp từ: D01_Dirichlet(100%) · D04_RecencyML(100%) · D05_MarkovShrink(100%) · D10_MinVariance(100%)
+  Đạt 100.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.000
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D01_Dirichlet           Bayes     65%    100% ←
+    2 D04_RecencyML       thời gian     65%    100% ←
+    3 D05_MarkovShrink       Markov     65%    100% ←
+    4 D10_MinVariance       ổn định     65%    100% ←
+    5 D06_CrossPrize       gộp giải     76%     80%
+    6 D03_JelinekJoint      nội suy     60%     90%
+    7 D08_DigitIndep        độc lập     60%     90%
+    8 D09_KernelSmooth     làm mượt     52%     80%
+    9 D12_Uniform         ĐỐI CHỨNG     56%     70% ⚠ĐC
+   10 D11_GapHazard       ĐỐI CHỨNG     65%     50% ⚠ĐC
+   11 D02_JamesStein        co ngót     61%     40%
+   12 D07_Hierarchy       phân tầng     57%     40%
+
+================================================================================
+  TP. HỒ CHÍ MINH  —  ③ ĐỀ ĐẦU (G8)
+================================================================================
+
+  00,01,02,03,04,05,06,07,08,10,11,12,13,14,16,17,18,20,22,24,26,28,30,31,32,34,35,36,37,38,40,42,44,45,46,47,48,50,52,54,56,58,60,62,64,66,67,68,70,71,72,74,76,78,80,82,86,88,90,92,93,94,96,98
+
+  Gộp từ: D07_Hierarchy(90%) · D08_DigitIndep(90%) · D03_JelinekJoint(90%) · D06_CrossPrize(70%)
+  Đạt 85.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.062
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D07_Hierarchy       phân tầng     75%     90% ←
+    2 D08_DigitIndep        độc lập     65%     90% ←
+    3 D03_JelinekJoint      nội suy     64%     90% ←
+    4 D06_CrossPrize       gộp giải     65%     70% ←
+    5 D11_GapHazard       ĐỐI CHỨNG     63%     70% ⚠ĐC
+    6 D12_Uniform         ĐỐI CHỨNG     68%     60% ⚠ĐC
+    7 D01_Dirichlet           Bayes     61%     70%
+    8 D02_JamesStein        co ngót     61%     70%
+    9 D04_RecencyML       thời gian     61%     70%
+   10 D05_MarkovShrink       Markov     61%     70%
+   11 D10_MinVariance       ổn định     61%     70%
+   12 D09_KernelSmooth     làm mượt     51%     50%
+
+================================================================================
+  ĐỒNG THÁP  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  01,02,04,05,06,07,08,09,11,12,14,15,16,17,18,19,22,23,24,25,26,27,28,30,31,32,33,34,36,37,38,41,42,43,45,46,48,61,62,64,65,66,67,68,69,71,75,76,78,80,81,82,84,85,87,88,89,91,92,94,95,96,97,98
+
+  Gộp từ: D03_JelinekJoint(80%) · D08_DigitIndep(80%) · D12_Uniform(70%) · D01_Dirichlet(80%)
+  Đạt 77.5% trong 10 kỳ gần | ảo giác 78.2% | p = 0.639
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D03_JelinekJoint      nội suy     61%     80% ←
+    2 D08_DigitIndep        độc lập     61%     80% ←
+    3 D12_Uniform         ĐỐI CHỨNG     67%     70% ←
+    4 D01_Dirichlet           Bayes     60%     80% ←
+    5 D04_RecencyML       thời gian     60%     80%
+    6 D05_MarkovShrink       Markov     60%     80%
+    7 D10_MinVariance       ổn định     60%     80%
+    8 D06_CrossPrize       gộp giải     65%     70%
+    9 D07_Hierarchy       phân tầng     64%     70%
+   10 D09_KernelSmooth     làm mượt     61%     70%
+   11 D02_JamesStein        co ngót     65%     60%
+   12 D11_GapHazard       ĐỐI CHỨNG     61%     50% ⚠ĐC
+
+================================================================================
+  ĐỒNG THÁP  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  00,01,02,03,04,09,10,11,12,13,14,15,20,21,22,23,24,25,28,29,30,31,32,33,35,37,38,39,40,42,43,44,48,49,51,53,55,59,61,62,64,65,70,71,73,74,75,80,81,82,83,84,85,88,89,90,91,92,93,94,95,97,98,99
+
+  Gộp từ: D11_GapHazard(70%) · D09_KernelSmooth(60%) · D08_DigitIndep(60%) · D07_Hierarchy(70%)
+  Đạt 65.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.995
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D11_GapHazard       ĐỐI CHỨNG     64%     70% ←
+    2 D09_KernelSmooth     làm mượt     64%     60% ←
+    3 D08_DigitIndep        độc lập     63%     60% ←
+    4 D07_Hierarchy       phân tầng     55%     70% ←
+    5 D03_JelinekJoint      nội suy     60%     60%
+    6 D01_Dirichlet           Bayes     59%     60%
+    7 D04_RecencyML       thời gian     59%     60%
+    8 D05_MarkovShrink       Markov     59%     60%
+    9 D10_MinVariance       ổn định     59%     60%
+   10 D06_CrossPrize       gộp giải     64%     50%
+   11 D02_JamesStein        co ngót     57%     60%
+   12 D12_Uniform         ĐỐI CHỨNG     48%     60% ⚠ĐC
+
+================================================================================
+  ĐỒNG THÁP  —  ③ ĐỀ ĐẦU (G8)
+================================================================================
+
+  00,01,02,03,04,05,07,09,10,12,13,14,15,16,17,19,23,25,26,28,29,30,31,32,34,36,37,38,39,41,43,47,48,49,50,51,52,56,58,59,62,64,65,68,69,70,73,74,75,76,78,80,81,82,83,84,86,87,91,92,93,94,95,96
+
+  Gộp từ: D02_JamesStein(80%) · D11_GapHazard(70%) · D09_KernelSmooth(60%) · D07_Hierarchy(60%)
+  Đạt 67.5% trong 10 kỳ gần | ảo giác 78.2% | p = 0.985
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D02_JamesStein        co ngót     64%     80% ←
+    2 D11_GapHazard       ĐỐI CHỨNG     68%     70% ←
+    3 D09_KernelSmooth     làm mượt     67%     60% ←
+    4 D07_Hierarchy       phân tầng     65%     60% ←
+    5 D12_Uniform         ĐỐI CHỨNG     57%     70% ⚠ĐC
+    6 D03_JelinekJoint      nội suy     68%     50%
+    7 D08_DigitIndep        độc lập     68%     50%
+    8 D06_CrossPrize       gộp giải     64%     50%
+    9 D01_Dirichlet           Bayes     63%     40%
+   10 D04_RecencyML       thời gian     63%     40%
+   11 D05_MarkovShrink       Markov     63%     40%
+   12 D10_MinVariance       ổn định     63%     40%
+
+================================================================================
+  PHÚ YÊN  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,18,20,21,23,24,27,28,29,30,31,33,34,35,36,38,39,41,45,47,48,50,53,54,58,59,61,64,66,68,69,70,71,72,73,79,80,81,82,85,86,88,90,93,94,96,97,98,99
+
+  Gộp từ: D01_Dirichlet(100%) · D04_RecencyML(100%) · D05_MarkovShrink(100%) · D10_MinVariance(100%)
+  Đạt 100.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.000
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D01_Dirichlet           Bayes     73%    100% ←
+    2 D04_RecencyML       thời gian     73%    100% ←
+    3 D05_MarkovShrink       Markov     73%    100% ←
+    4 D10_MinVariance       ổn định     73%    100% ←
+    5 D08_DigitIndep        độc lập     68%    100%
+    6 D03_JelinekJoint      nội suy     67%     90%
+    7 D02_JamesStein        co ngót     64%     90%
+    8 D06_CrossPrize       gộp giải     71%     70%
+    9 D12_Uniform         ĐỐI CHỨNG     68%     70% ⚠ĐC
+   10 D09_KernelSmooth     làm mượt     65%     70%
+   11 D07_Hierarchy       phân tầng     60%     60%
+   12 D11_GapHazard       ĐỐI CHỨNG     64%     30% ⚠ĐC
+
+================================================================================
+  PHÚ YÊN  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,17,18,20,21,22,24,25,27,28,29,30,31,32,34,35,38,39,41,42,43,44,46,49,51,52,53,55,57,61,63,65,67,68,69,70,73,78,82,83,86,87,89,91,93,95,97,98,99
+
+  Gộp từ: D01_Dirichlet(70%) · D02_JamesStein(70%) · D04_RecencyML(70%) · D05_MarkovShrink(70%)
+  Đạt 70.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.953
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D01_Dirichlet           Bayes     77%     70% ←
+    2 D02_JamesStein        co ngót     77%     70% ←
+    3 D04_RecencyML       thời gian     77%     70% ←
+    4 D05_MarkovShrink       Markov     77%     70% ←
+    5 D10_MinVariance       ổn định     77%     70%
+    6 D07_Hierarchy       phân tầng     67%     70%
+    7 D08_DigitIndep        độc lập     64%     70%
+    8 D06_CrossPrize       gộp giải     65%     60%
+    9 D03_JelinekJoint      nội suy     56%     60%
+   10 D11_GapHazard       ĐỐI CHỨNG     53%     60% ⚠ĐC
+   11 D09_KernelSmooth     làm mượt     61%     40%
+   12 D12_Uniform         ĐỐI CHỨNG     56%     40% ⚠ĐC
+
+================================================================================
+  PHÚ YÊN  —  ③ ĐỀ ĐẦU (G8)
+================================================================================
+
+  00,02,03,04,05,07,08,12,14,16,17,28,30,32,34,35,36,37,38,40,42,43,44,45,46,47,48,49,50,52,53,54,55,56,57,58,60,62,64,65,66,67,68,72,73,74,75,77,78,80,81,82,85,86,87,90,91,92,93,94,95,96,97,98
+
+  Gộp từ: D03_JelinekJoint(90%) · D08_DigitIndep(90%) · D11_GapHazard(70%) · D12_Uniform(70%)
+  Đạt 80.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.473
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D03_JelinekJoint      nội suy     71%     90% ←
+    2 D08_DigitIndep        độc lập     68%     90% ←
+    3 D11_GapHazard       ĐỐI CHỨNG     68%     70% ←
+    4 D12_Uniform         ĐỐI CHỨNG     65%     70% ←
+    5 D01_Dirichlet           Bayes     59%     80%
+    6 D04_RecencyML       thời gian     59%     80%
+    7 D05_MarkovShrink       Markov     59%     80%
+    8 D10_MinVariance       ổn định     59%     80%
+    9 D09_KernelSmooth     làm mượt     61%     70%
+   10 D02_JamesStein        co ngót     60%     70%
+   11 D06_CrossPrize       gộp giải     59%     70%
+   12 D07_Hierarchy       phân tầng     52%     80%
+
+================================================================================
+  THÀNH PHỐ HUẾ  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,36,40,41,42,50,52,53,54,55,57,61,62,64,67,68,70,72,74,78,79,80,81,82,84,86,89,94,95,97,99
+
+  Gộp từ: D01_Dirichlet(80%) · D02_JamesStein(80%) · D04_RecencyML(80%) · D05_MarkovShrink(80%)
+  Đạt 80.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.473
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D01_Dirichlet           Bayes     75%     80% ←
+    2 D02_JamesStein        co ngót     75%     80% ←
+    3 D04_RecencyML       thời gian     75%     80% ←
+    4 D05_MarkovShrink       Markov     75%     80% ←
+    5 D10_MinVariance       ổn định     75%     80%
+    6 D03_JelinekJoint      nội suy     76%     60%
+    7 D08_DigitIndep        độc lập     73%     60%
+    8 D09_KernelSmooth     làm mượt     76%     50%
+    9 D06_CrossPrize       gộp giải     63%     60%
+   10 D07_Hierarchy       phân tầng     67%     50%
+   11 D11_GapHazard       ĐỐI CHỨNG     53%     60% ⚠ĐC
+   12 D12_Uniform         ĐỐI CHỨNG     60%     30% ⚠ĐC
+
+================================================================================
+  THÀNH PHỐ HUẾ  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  00,01,02,03,04,05,07,09,11,13,14,16,17,18,20,21,23,26,27,28,30,31,32,34,35,36,37,39,40,41,45,46,48,49,50,53,54,56,57,59,62,63,64,66,67,68,69,70,71,73,75,76,78,81,82,84,85,86,87,90,91,93,95,96
+
+  Gộp từ: D11_GapHazard(80%) · D07_Hierarchy(70%) · D02_JamesStein(70%) · D01_Dirichlet(60%)
+  Đạt 70.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.903
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D11_GapHazard       ĐỐI CHỨNG     71%     80% ←
+    2 D07_Hierarchy       phân tầng     72%     70% ←
+    3 D02_JamesStein        co ngót     65%     70% ←
+    4 D01_Dirichlet           Bayes     68%     60% ←
+    5 D04_RecencyML       thời gian     68%     60%
+    6 D05_MarkovShrink       Markov     68%     60%
+    7 D10_MinVariance       ổn định     68%     60%
+    8 D06_CrossPrize       gộp giải     64%     60%
+    9 D12_Uniform         ĐỐI CHỨNG     59%     60% ⚠ĐC
+   10 D09_KernelSmooth     làm mượt     57%     60%
+   11 D08_DigitIndep        độc lập     61%     50%
+   12 D03_JelinekJoint      nội suy     60%     40%
+
+================================================================================
+  THÀNH PHỐ HUẾ  —  ③ ĐỀ ĐẦU (G8)
+================================================================================
+
+  03,04,05,06,07,14,19,20,22,23,24,25,26,28,29,30,32,33,34,38,39,40,41,43,45,46,48,49,50,52,53,54,55,56,57,58,59,61,62,64,65,66,67,68,69,74,75,76,77,78,79,80,83,84,85,86,89,91,93,94,95,96,97,98
+
+  Gộp từ: D12_Uniform(100%) · D09_KernelSmooth(90%) · D11_GapHazard(70%) · D08_DigitIndep(70%)
+  Đạt 82.5% trong 10 kỳ gần | ảo giác 78.2% | p = 0.294
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D12_Uniform         ĐỐI CHỨNG     59%    100% ←
+    2 D09_KernelSmooth     làm mượt     61%     90% ←
+    3 D11_GapHazard       ĐỐI CHỨNG     69%     70% ←
+    4 D08_DigitIndep        độc lập     61%     70% ←
+    5 D03_JelinekJoint      nội suy     60%     70%
+    6 D07_Hierarchy       phân tầng     65%     60%
+    7 D06_CrossPrize       gộp giải     56%     70%
+    8 D01_Dirichlet           Bayes     51%     70%
+    9 D04_RecencyML       thời gian     51%     70%
+   10 D05_MarkovShrink       Markov     51%     70%
+   11 D10_MinVariance       ổn định     51%     70%
+   12 D02_JamesStein        co ngót     53%     50%
+
+================================================================================
+  MIỀN BẮC (XSMB)  —  ① ĐỀ ĐẶC BIỆT
+================================================================================
+
+  00,01,03,04,09,10,11,12,13,14,16,17,18,19,21,22,23,25,26,28,29,32,33,34,35,36,37,38,39,42,43,44,45,47,51,52,53,54,55,57,60,61,63,65,66,67,68,70,71,72,78,79,80,81,83,84,87,89,90,91,94,96,97,99
+
+  Gộp từ: D09_KernelSmooth(100%) · D02_JamesStein(80%) · D01_Dirichlet(80%) · D04_RecencyML(80%)
+  Đạt 85.0% trong 10 kỳ gần | ảo giác 78.2% | p = 0.062
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D09_KernelSmooth     làm mượt     69%    100% ←
+    2 D02_JamesStein        co ngót     68%     80% ←
+    3 D01_Dirichlet           Bayes     65%     80% ←
+    4 D04_RecencyML       thời gian     65%     80% ←
+    5 D05_MarkovShrink       Markov     65%     80%
+    6 D10_MinVariance       ổn định     65%     80%
+    7 D11_GapHazard       ĐỐI CHỨNG     68%     70% ⚠ĐC
+    8 D12_Uniform         ĐỐI CHỨNG     63%     70% ⚠ĐC
+    9 D06_CrossPrize       gộp giải     61%     60%
+   10 D07_Hierarchy       phân tầng     59%     60%
+   11 D03_JelinekJoint      nội suy     57%     60%
+   12 D08_DigitIndep        độc lập     56%     60%
+
+================================================================================
+  MIỀN BẮC (XSMB)  —  ② ĐỀ GIẢI NHẤT
+================================================================================
+
+  00,03,04,06,07,12,14,17,20,23,24,26,27,28,29,31,32,33,34,35,41,43,44,45,46,48,49,50,51,52,54,56,57,59,60,61,62,64,65,67,68,69,70,71,72,73,75,76,77,78,80,83,85,86,87,88,89,90,91,92,95,96,97,99
+
+  Gộp từ: D12_Uniform(90%) · D01_Dirichlet(80%) · D02_JamesStein(80%) · D04_RecencyML(80%)
+  Đạt 82.5% trong 10 kỳ gần | ảo giác 78.2% | p = 0.294
+
+    # Engine                   Loại  toàn kỳ     gần
+  ----------------------------------------------------
+    1 D12_Uniform         ĐỐI CHỨNG     72%     90% ←
+    2 D01_Dirichlet           Bayes     63%     80% ←
+    3 D02_JamesStein        co ngót     63%     80% ←
+    4 D04_RecencyML       thời gian     63%     80% ←
+    5 D05_MarkovShrink       Markov     63%     80%
+    6 D10_MinVariance       ổn định     63%     80%
+    7 D07_Hierarchy       phân tầng     65%     70%
+    8 D11_GapHazard       ĐỐI CHỨNG     60%     70% ⚠ĐC
+    9 D09_KernelSmooth     làm mượt     69%     50%
+   10 D06_CrossPrize       gộp giải     63%     60%
+   11 D08_DigitIndep        độc lập     61%     50%
+   12 D03_JelinekJoint      nội suy     59%     50%
+
+================================================================================
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
