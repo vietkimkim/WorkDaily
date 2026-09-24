@@ -1,0 +1,38 @@
+==============================================================================
+  KIỂM CHỨNG MANH MỐI DUY NHẤT — MIỀN BẮC GIẢI NHẤT
+==============================================================================
+  Đang tải từ web...
+  ⚠ Chỉ có 200 kỳ (yêu cầu 450) — dùng 200 kỳ.
+  200 kỳ Miền Bắc
+
+[K1] KHO CÓ KỲ BỊ LƯU LẶP KHÔNG?
+     Số kỳ: 200 · số ngày KHÁC NHAU: 200 · kỳ trùng khít kỳ liền trước: 0
+     → SẠCH ✓
+
+[K2] G1 CÓ LẶP BẤT THƯỜNG GIỮA CÁC KỲ LIỀN KỀ?
+     G1 lặp y hệt kỳ trước: 1 lần (kỳ vọng ngẫu nhiên 2.0) · p = 0.8647
+     Số giá trị G1 KHÁC NHAU trong 200 kỳ: 80 (kỳ vọng ~87)
+     → BÌNH THƯỜNG ✓
+
+[K3] ĐỘ LỆCH CÓ LẶP LẠI Ở CÁC KHỐI ĐỘC LẬP?
+     Khối (rời nhau)           G1 trúng    Tỷ lệ        p
+     kỳ   1–150             41/50         82%    0.004
+     Chỉ đủ 1 khối — cần >= 300 kỳ cho 2 khối độc lập
+     → KHÔNG lặp lại ✗ — độ lệch không tái hiện ở dữ liệu độc lập
+
+[K5] G1 CÓ VƯỢT ĐB CÙNG ĐÀI VÀ BỐC NGẪU NHIÊN?
+     G1 44/50 · ĐB 33/50 · ngẫu nhiên TB 32.2/50
+     P(ngẫu nhiên >= G1) = 0.0000
+     → VƯỢT ĐỐI CHỨNG ✓
+
+==============================================================================
+  PHÁN XỬ: qua 3/4 phép kiểm
+==============================================================================
+     K1  ✓
+     K2  ✓
+     K3  ✗
+     K5  ✓
+
+  → KHÔNG ĐỦ ĐIỀU KIỆN. Manh mối 88% không đứng vững.
+    Khả năng cao là lỗi dữ liệu hoặc may rủi trong 107 phép thử.
+    Không có engine nào khai thác được — vì không có gì để khai thác.
