@@ -21,8 +21,8 @@
      → KHÔNG lặp lại ✗ — độ lệch không tái hiện ở dữ liệu độc lập
 
 [K5] G1 CÓ VƯỢT ĐB CÙNG ĐÀI VÀ BỐC NGẪU NHIÊN?
-     G1 44/50 · ĐB 33/50 · ngẫu nhiên TB 32.2/50
-     P(ngẫu nhiên >= G1) = 0.0000
+     G1 43/50 · ĐB 34/50 · ngẫu nhiên TB 32.1/50
+     P(ngẫu nhiên >= G1) = 0.0010
      → VƯỢT ĐỐI CHỨNG ✓
 
 ==============================================================================
@@ -36,3 +36,6 @@
   → KHÔNG ĐỦ ĐIỀU KIỆN. Manh mối 88% không đứng vững.
     Khả năng cao là lỗi dữ liệu hoặc may rủi trong 107 phép thử.
     Không có engine nào khai thác được — vì không có gì để khai thác.
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
