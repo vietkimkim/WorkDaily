@@ -162,8 +162,103 @@ def main():
     return ket
 
 
+# ==============================================================================
+#  GỬI EMAIL — ghi lại TOÀN BỘ báo cáo in ra màn hình rồi gửi đi
+# ==============================================================================
+import io, html, smtplib
+from datetime import datetime, timedelta, timezone
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import formataddr
+
+VN = timezone(timedelta(hours=7))
+EMAIL_NHAN = os.environ.get("MAIL_TO",   "Linh.tm.pg@gmail.com")
+EMAIL_GUI  = os.environ.get("MAIL_USER", "Linh.tm.pg@gmail.com")
+
+
+class _Tee:
+    """Vừa in ra màn hình (log GitHub), vừa ghi vào bộ đệm để gửi email."""
+    def __init__(self, *luong):
+        self.luong = luong
+    def write(self, s):
+        for l in self.luong:
+            l.write(s)
+    def flush(self):
+        for l in self.luong:
+            l.flush()
+
+
+def gui_email(bao_cao, ket):
+    mk = E._lay_mat_khau()
+    hn = datetime.now(VN)
+    if ket:
+        qua, tong = sum(ket.values()), len(ket)
+        dat = qua == tong
+        tieu_de = (f"[KIỂM CHỨNG MB G1] QUA {qua}/{tong} — "
+                   + ("ĐẠT, độ lệch có vẻ THẬT" if dat else "KHÔNG ĐẠT"))
+        mau = "#2e7d32" if dat else "#c62828"
+        ket_luan = ("QUA TẤT CẢ phép kiểm — độ lệch Miền Bắc Giải Nhất có vẻ thật. "
+                    "Theo dõi tiến cứu 30 kỳ với tiền nhỏ trước khi tin."
+                    if dat else
+                    "KHÔNG qua đủ phép kiểm — manh mối 88% không đứng vững. "
+                    "Khả năng cao là lỗi dữ liệu hoặc may rủi.")
+        dong_kq = "".join(
+            f'<tr><td style="padding:4px 12px">{k}</td>'
+            f'<td style="padding:4px 12px;color:{"#2e7d32" if v else "#c62828"}">'
+            f'<b>{"✓ QUA" if v else "✗ TRƯỢT"}</b></td></tr>'
+            for k, v in ket.items())
+    else:
+        tieu_de = "[KIỂM CHỨNG MB G1] LỖI — không lấy được dữ liệu"
+        mau, ket_luan, dong_kq = "#c62828", "Không lấy được dữ liệu Miền Bắc.", ""
+
+    than = (f'<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;'
+            f'max-width:780px;color:#222">'
+            f'<h2 style="margin:0 0 4px">Kiểm chứng Miền Bắc Giải Nhất</h2>'
+            f'<p style="color:#666;margin:0 0 14px;font-size:13px">'
+            f'{hn:%d.%m.%Y %H:%M} (giờ VN)</p>'
+            f'<div style="border-left:4px solid {mau};background:#fafafa;'
+            f'padding:11px 14px;margin:0 0 16px;font-size:14px">'
+            f'<b style="color:{mau}">KẾT LUẬN:</b> {ket_luan}</div>'
+            + (f'<table style="font-size:13px;border-collapse:collapse;margin:0 0 18px;'
+               f'background:#eceff1">{dong_kq}</table>' if dong_kq else '')
+            + f'<div style="font-size:13px;font-weight:600;margin:0 0 6px">'
+            f'BÁO CÁO ĐẦY ĐỦ</div>'
+            f'<pre style="font-family:ui-monospace,Menlo,Consolas,monospace;'
+            f'font-size:12px;background:#f5f7f8;border:1px solid #cfd8dc;'
+            f'padding:12px;white-space:pre-wrap;line-height:1.5">'
+            f'{html.escape(bao_cao)}</pre></div>')
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = tieu_de
+    msg["From"] = formataddr(("XSMN Kiểm Chứng", EMAIL_GUI))
+    msg["To"] = EMAIL_NHAN
+    msg.attach(MIMEText(bao_cao, "plain", "utf-8"))
+    msg.attach(MIMEText(than, "html", "utf-8"))
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as sv:
+        sv.login(EMAIL_GUI, mk)
+        sv.send_message(msg)
+
+
 if __name__ == "__main__":
-    kho = E.doc_master()
-    if kho is None:
-        print("Chưa có kho — quét lần đầu..."); E.tao_master(so_ky=450)
-    main()
+    import traceback
+    dem = io.StringIO()
+    goc = sys.stdout
+    sys.stdout = _Tee(goc, dem)
+    ket = None
+    try:
+        kho = E.doc_master()
+        if kho is None:
+            print("Chưa có kho — quét lần đầu..."); E.tao_master(so_ky=450)
+        ket = main()
+    except Exception:
+        traceback.print_exc()
+    finally:
+        sys.stdout = goc
+
+    print("\n  Đang gửi email...")
+    try:
+        gui_email(dem.getvalue(), ket)
+        print(f"  ✓ Đã gửi email tới {EMAIL_NHAN}")
+    except Exception as e:
+        print(f"  ✗ KHÔNG gửi được email: {e}")
+        sys.exit(1)
