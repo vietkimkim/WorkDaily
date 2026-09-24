@@ -1,0 +1,51 @@
+  Mật khẩu ứng dụng: OK
+  Kho: 36 đài, cập nhật 2026-09-24T08:29
+  Cập nhật 36 đài (tải 20 kỳ gần nhất mỗi đài)...
+     + [ 2] An Giang              1 kỳ mới → mới nhất 2026-09-24
+     + [ 7] Bình Thuận            1 kỳ mới → mới nhất 2026-09-24
+     + [17] Tây Ninh              1 kỳ mới → mới nhất 2026-09-24
+     + [22] Bình Định             1 kỳ mới → mới nhất 2026-09-24
+     + [31] Quảng Bình            1 kỳ mới → mới nhất 2026-09-24
+     + [34] Quảng Trị             1 kỳ mới → mới nhất 2026-09-24
+     + [36] Miền Bắc (XSMB)       1 kỳ mới → mới nhất 2026-09-24
+
+  Xong. Thêm 7 kỳ mới.
+==============================================================================
+  ENGINE TÍN HIỆU  |  Thứ 5 24.09.2026
+==============================================================================
+
+[TẦNG 2] Chấm 0 đề xuất cũ vừa có kết quả
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+
+[TẦNG 1] 7 đài quay hôm nay · 20 ô kiểm · ngưỡng Bonferroni p < 0.00250
+     · An Giang          Đặc Biệt   NHIỄU          A 29/50 · B 35/50 · p 5.45e-01
+     · An Giang          Giải Nhất  NHIỄU          A 31/50 · B 34/50 · p 4.62e-01
+     · An Giang          Giải 8     NHIỄU          A 30/50 · B 32/50 · p 7.01e-01
+     · Bình Thuận        Đặc Biệt   NHIỄU          A 29/50 · B 35/50 · p 5.45e-01
+     · Bình Thuận        Giải Nhất  NHIỄU          A 34/50 · B 31/50 · p 4.62e-01
+     · Bình Thuận        Giải 8     NHIỄU          A 38/50 · B 30/50 · p 2.34e-01
+     · Tây Ninh          Đặc Biệt   NHIỄU          A 32/50 · B 31/50 · p 6.26e-01
+     · Tây Ninh          Giải Nhất  NHIỄU          A 42/50 · B 29/50 · p 8.63e-02
+     · Tây Ninh          Giải 8     NHIỄU          A 36/50 · B 30/50 · p 3.81e-01
+     · Bình Định         Đặc Biệt   NHIỄU          A 26/50 · B 36/50 · p 7.01e-01
+     · Bình Định         Giải Nhất  NHIỄU          A 31/50 · B 34/50 · p 4.62e-01
+     · Bình Định         Giải 8     NHIỄU          A 35/50 · B 32/50 · p 3.04e-01
+     · Quảng Bình        Đặc Biệt   NHIỄU          A 32/50 · B 32/50 · p 5.45e-01
+     · Quảng Bình        Giải Nhất  NHIỄU          A 28/50 · B 22/50 · p 9.98e-01
+     · Quảng Bình        Giải 8     NHIỄU          A 30/50 · B 34/50 · p 5.45e-01
+     · Quảng Trị         Đặc Biệt   NHIỄU          A 34/50 · B 30/50 · p 5.45e-01
+     · Quảng Trị         Giải Nhất  NHIỄU          A 34/50 · B 32/50 · p 3.81e-01
+     · Quảng Trị         Giải 8     NHIỄU          A 30/50 · B 34/50 · p 5.45e-01
+     · Miền Bắc (XSMB)   Đặc Biệt   NHIỄU          A 35/50 · B 34/50 · p 1.75e-01
+     ✓ Miền Bắc (XSMB)   Giải Nhất  TÍN HIỆU       A 41/50 · B 37/50 · p 1.83e-03
+
+  KẾT QUẢ: 1 ô có tín hiệu / 20 ô kiểm
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
