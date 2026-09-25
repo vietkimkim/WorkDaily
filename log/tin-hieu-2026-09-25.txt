@@ -1,0 +1,42 @@
+  Mật khẩu ứng dụng: OK
+  Kho: 36 đài, cập nhật 2026-09-25T08:25
+  Cập nhật 36 đài (tải 20 kỳ gần nhất mỗi đài)...
+
+  Xong. Thêm 0 kỳ mới.
+==============================================================================
+  ENGINE TÍN HIỆU  |  Thứ 6 25.09.2026
+==============================================================================
+
+[TẦNG 2] Chấm 1 đề xuất cũ vừa có kết quả
+     2026-09-24 Miền Bắc (XSMB)   Giải Nhất  ra 82 → TRƯỢT
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+  ⚠ Chỉ có 199 kỳ (yêu cầu 220) — dùng 199 kỳ.
+  ⚠ Chỉ có 200 kỳ (yêu cầu 220) — dùng 200 kỳ.
+
+[TẦNG 1] 6 đài quay hôm nay · 17 ô kiểm · ngưỡng Bonferroni p < 0.00294
+     · Bình Dương        Đặc Biệt   NHIỄU          A 32/50 · B 34/50 · p 3.81e-01
+     · Bình Dương        Giải Nhất  NHIỄU          A 35/50 · B 37/50 · p 5.71e-02
+     · Bình Dương        Giải 8     NHIỄU          A 33/50 · B 34/50 · p 3.04e-01
+     · Trà Vinh          Đặc Biệt   NHIỄU          A 34/50 · B 29/50 · p 6.26e-01
+     · Trà Vinh          Giải Nhất  NHIỄU          A 32/50 · B 28/50 · p 8.26e-01
+     · Trà Vinh          Giải 8     NHIỄU          A 38/50 · B 33/50 · p 8.63e-02
+     · Vĩnh Long         Đặc Biệt   NHIỄU          A 28/50 · B 28/50 · p 9.60e-01
+     · Vĩnh Long         Giải Nhất  NHIỄU          A 35/50 · B 31/50 · p 3.81e-01
+     · Vĩnh Long         Giải 8     NHIỄU          A 30/50 · B 33/50 · p 6.26e-01
+     · Gia Lai           Đặc Biệt   NHIỄU          A 31/50 · B 31/50 · p 7.01e-01
+     · Gia Lai           Giải Nhất  NHIỄU          A 26/50 · B 31/50 · p 9.40e-01
+     · Gia Lai           Giải 8     NHIỄU          A 32/50 · B 29/50 · p 7.68e-01
+     · Ninh Thuận        Đặc Biệt   NHIỄU          A 34/50 · B 33/50 · p 3.04e-01
+     · Ninh Thuận        Giải Nhất  NHIỄU          A 31/50 · B 31/50 · p 7.01e-01
+     · Ninh Thuận        Giải 8     NHIỄU          A 28/50 · B 35/50 · p 6.26e-01
+     · Miền Bắc (XSMB)   Đặc Biệt   NHIỄU          A 34/50 · B 32/50 · p 3.81e-01
+     · Miền Bắc (XSMB)   Giải Nhất  NHIỄU          A 41/50 · B 36/50 · p 3.68e-03
+
+  KẾT QUẢ: 0 ô có tín hiệu / 17 ô kiểm
+  → Hôm nay không đài × giải nào đủ ổn định. Không đề xuất.
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
