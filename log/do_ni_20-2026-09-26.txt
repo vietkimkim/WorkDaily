@@ -1,0 +1,55 @@
+  Mật khẩu ứng dụng: OK
+  Kho: 36 đài, cập nhật 2026-09-26T17:55
+  Cập nhật 36 đài (tải 20 kỳ gần nhất mỗi đài)...
+     + [33] Quảng Ngãi            1 kỳ mới → mới nhất 2026-09-26
+     + [36] Miền Bắc (XSMB)       1 kỳ mới → mới nhất 2026-09-26
+
+  Xong. Thêm 2 kỳ mới.
+================================================================================
+  ĐO NI 130+20 — PHƯƠNG ÁN A  |  Thứ 7 26.09.2026
+  Đề xuất khi tỷ lệ trúng 20 kỳ gần nhất > 64%  ·  hoà vốn 67.37%
+================================================================================
+
+  BÌNH PHƯỚC
+     ① Đặc Biệt     ĐỂ TRỐNG   ĐỘC LẬP     trúng 12/20 = 60%
+     ② Giải Nhất    ĐỂ TRỐNG   GỘP GIẢI    trúng 12/20 = 60%
+     ③ Giải 8       ĐỂ TRỐNG   ĐỀU         trúng 9/20 = 45%
+
+  HẬU GIANG
+     ① Đặc Biệt     ĐỀ XUẤT    GỘP GIẢI    trúng 13/20 = 65%
+     ② Giải Nhất    ĐỀ XUẤT    ĐỘC LẬP     trúng 15/20 = 75%
+     ③ Giải 8       ĐỂ TRỐNG   GAN         trúng 10/20 = 50%
+
+  LONG AN
+     ① Đặc Biệt     ĐỂ TRỐNG   ĐỀU         trúng 10/20 = 50%
+     ② Giải Nhất    ĐỀ XUẤT    ĐỘC LẬP     trúng 15/20 = 75%
+     ③ Giải 8       ĐỀ XUẤT    TỔNG CS     trúng 16/20 = 80%
+
+  TP. HỒ CHÍ MINH
+     ① Đặc Biệt     ĐỂ TRỐNG   GỘP GIẢI    trúng 11/20 = 55%
+     ② Giải Nhất    ĐỀ XUẤT    ĐỘC LẬP     trúng 13/20 = 65%
+     ③ Giải 8       ĐỀ XUẤT    TẦN SUẤT    trúng 13/20 = 65%
+
+  QUẢNG NGÃI
+     ① Đặc Biệt     ĐỀ XUẤT    ĐỘC LẬP     trúng 13/20 = 65%
+     ② Giải Nhất    ĐỀ XUẤT    TẦN SUẤT    trúng 15/20 = 75%
+     ③ Giải 8       ĐỂ TRỐNG   CỬA SỔ 10   trúng 10/20 = 50%
+
+  ĐÀ NẴNG
+     ① Đặc Biệt     ĐỀ XUẤT    LỊCH        trúng 14/20 = 70%
+     ② Giải Nhất    ĐỀ XUẤT    GAN         trúng 14/20 = 70%
+     ③ Giải 8       ĐỀ XUẤT    MARKOV      trúng 17/20 = 85%
+
+  ĐẮK NÔNG
+     ① Đặc Biệt     ĐỂ TRỐNG   MARKOV      trúng 11/20 = 55%
+     ② Giải Nhất    ĐỂ TRỐNG   TẦN SUẤT    trúng 11/20 = 55%
+     ③ Giải 8       ĐỀ XUẤT    MARKOV      trúng 14/20 = 70%
+
+  MIỀN BẮC (XSMB)
+     ① Đặc Biệt     ĐỂ TRỐNG   ĐỘC LẬP     trúng 12/20 = 60%
+     ② Giải Nhất    ĐỀ XUẤT    GẦN ĐÂY 5   trúng 15/20 = 75%
+
+  13 đề xuất / 23 giải
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
