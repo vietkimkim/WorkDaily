@@ -1,0 +1,58 @@
+  Mật khẩu ứng dụng: OK
+  Kho: 36 đài, cập nhật 2026-09-26T14:57
+  Cập nhật 36 đài (tải 20 kỳ gần nhất mỗi đài)...
+     + [ 1] TP. Hồ Chí Minh       1 kỳ mới → mới nhất 2026-09-26
+     + [ 6] Bình Phước            1 kỳ mới → mới nhất 2026-09-26
+     + [13] Hậu Giang             1 kỳ mới → mới nhất 2026-09-26
+     + [15] Long An               1 kỳ mới → mới nhất 2026-09-26
+     + [23] Đà Nẵng               1 kỳ mới → mới nhất 2026-09-26
+     + [25] Đắk Nông              1 kỳ mới → mới nhất 2026-09-26
+
+  Xong. Thêm 6 kỳ mới.
+================================================================================
+  ĐO NI ĐÓNG GIÀY  |  Thứ 7 26.09.2026  |  tháng đo 2026-09
+================================================================================
+
+  BÌNH PHƯỚC
+     ① Đặc Biệt     Không có logic riêng     ĐỘC LẬP · khám phá 67% → kiểm chứng 37/50 p=9.0e-02   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     GỘP GIẢI · khám phá 77% → kiểm chứng 32/50 p=5.6e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     CỬA SỔ 30 · khám phá 71% → kiểm chứng 31/50 p=6.7e-01   [ĐO MỚI]
+
+  HẬU GIANG
+     ① Đặc Biệt     Không có logic riêng     ĐỀU · khám phá 67% → kiểm chứng 28/50 p=9.1e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     ĐỘC LẬP · khám phá 74% → kiểm chứng 39/50 p=2.5e-02   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     GAN · khám phá 69% → kiểm chứng 31/50 p=6.7e-01   [ĐO MỚI]
+
+  LONG AN
+     ① Đặc Biệt     Không có logic riêng     GAN · khám phá 76% → kiểm chứng 34/50 p=3.3e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     ĐỘC LẬP · khám phá 64% → kiểm chứng 33/50 p=4.5e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     TỔNG CS · khám phá 74% → kiểm chứng 33/50 p=4.5e-01   [ĐO MỚI]
+
+  TP. HỒ CHÍ MINH
+     ① Đặc Biệt     Không có logic riêng     GỘP GIẢI · khám phá 74% → kiểm chứng 33/50 p=4.5e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     ĐỘC LẬP · khám phá 76% → kiểm chứng 31/50 p=6.7e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     TẦN SUẤT · khám phá 67% → kiểm chứng 30/50 p=7.7e-01   [ĐO MỚI]
+
+  QUẢNG NGÃI
+     ① Đặc Biệt     Không có logic riêng     MARKOV · khám phá 66% → kiểm chứng 26/50 p=9.7e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     ĐỀU · khám phá 70% → kiểm chứng 32/50 p=5.6e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     TỔNG CS · khám phá 67% → kiểm chứng 31/50 p=6.7e-01   [ĐO MỚI]
+
+  ĐÀ NẴNG
+     ① Đặc Biệt     Không có logic riêng     GAN · khám phá 69% → kiểm chứng 29/50 p=8.5e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     GAN · khám phá 76% → kiểm chứng 34/50 p=3.3e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     MARKOV · khám phá 76% → kiểm chứng 36/50 p=1.5e-01   [ĐO MỚI]
+
+  ĐẮK NÔNG
+     ① Đặc Biệt     Không có logic riêng     MARKOV · khám phá 73% → kiểm chứng 32/50 p=5.6e-01   [ĐO MỚI]
+     ② Giải Nhất    Không có logic riêng     TẦN SUẤT · khám phá 61% → kiểm chứng 35/50 p=2.3e-01   [ĐO MỚI]
+     ③ Giải 8       Không có logic riêng     ĐỘC LẬP · khám phá 57% → kiểm chứng 26/50 p=9.7e-01   [ĐO MỚI]
+
+  MIỀN BẮC (XSMB)
+     ① Đặc Biệt     Không có logic riêng     ĐỘC LẬP · khám phá 70% → kiểm chứng 30/50 p=7.7e-01   [ĐO MỚI]
+     ② Giải Nhất    CÓ LOGIC RIÊNG           GẦN ĐÂY 5 · khám phá 69% → kiểm chứng 42/50 p=1.6e-03   [ĐO MỚI]
+
+  23 bộ số · đo mới 23 giải · dùng lại hồ sơ 0 giải
+
+  Đang gửi email...
+  ✓ Đã gửi email tới Linh.tm.pg@gmail.com
